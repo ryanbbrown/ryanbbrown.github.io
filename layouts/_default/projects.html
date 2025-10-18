@@ -1,0 +1,16 @@
+{{ define "main" }}
+<main>
+    <h1>{{ .Title }}</h1>
+
+    {{ range .Params.projects }}
+    <div class="project-card">
+        <div class="project-header">
+            <h2>{{ .name }}</h2>
+            <span class="project-date">{{ .date }}</span>
+        </div>
+        <p class="project-description">{{ .description }}</p>
+        <a href="{{ .link }}" target="_blank" class="project-link">view project →</a>
+    </div>
+    {{ end }}
+</main>
+{{ end }}

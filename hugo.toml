@@ -1,0 +1,6 @@
+baseURL = 'https://ryanbbrown.com/'
+languageCode = 'en-us'
+title = 'ryan brown'
+
+# Disable taxonomy pages we don't need
+disableKinds = ["taxonomy", "term"]
