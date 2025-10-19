@@ -42,6 +42,20 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install notion-exporter
+        run: npm install -g notion-exporter
+
+      - name: Fetch Notion content
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_FILE_TOKEN: ${{ secrets.NOTION_FILE_TOKEN }}
+        run: ./fetch-notion-content.sh
+
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5

@@ -1,3 +1,24 @@
+:root {
+    /* Color palette */
+    --color-bg: #0a0a0a;
+    --color-bg-card: #0f0f0f;
+    --color-border: #222;
+
+    --color-h1: #fff;
+    --color-body-text: #e0e0e0;
+    --color-link: #888;
+    --color-link-hover: #e0e0e0;
+    --color-italics: #666;
+    --color-strong: #fff;
+    --color-strong-bg: #333;
+    --color-list-item: #fff;
+
+    --color-project-date: #666;
+    --color-project-description: #888;
+    --color-project-link: #666;
+    --color-project-link-hover: #888;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -9,8 +30,8 @@ html {
 }
 
 body {
-    background-color: #0a0a0a;
-    color: #e0e0e0;
+    background-color: var(--color-bg);
+    color: var(--color-body-text);
     font-family: 'Monaco', 'Courier New', monospace;
     font-size: 14px;
     line-height: 1.6;
@@ -31,7 +52,7 @@ header {
 }
 
 .header-left a {
-    color: #e0e0e0;
+    color: var(--color-body-text);
     text-decoration: none;
     font-size: 16px;
 }
@@ -42,13 +63,13 @@ header {
 }
 
 .header-right a {
-    color: #888;
+    color: var(--color-link);
     text-decoration: none;
     transition: color 0.2s;
 }
 
 .header-right a:hover {
-    color: #e0e0e0;
+    color: var(--color-link-hover);
 }
 
 /* Homepage centered content */
@@ -73,11 +94,11 @@ main.centered h1 {
     font-size: 32px;
     font-weight: 400;
     margin-bottom: 10px;
-    color: #fff;
+    color: var(--color-h1);
 }
 
 .tagline {
-    color: #888;
+    color: var(--color-link);
     margin-bottom: 30px;
 }
 
@@ -87,12 +108,12 @@ main.centered h1 {
 }
 
 .links a {
-    color: #888;
+    color: var(--color-link);
     transition: color 0.2s;
 }
 
 .links a:hover {
-    color: #e0e0e0;
+    color: var(--color-link-hover);
 }
 
 .links svg {
@@ -110,34 +131,45 @@ main h1 {
     font-size: 24px;
     font-weight: 400;
     margin-bottom: 40px;
-    color: #fff;
+    color: var(--color-h1);
+}
+
+/* Add spacing for H2/H3 in regular content pages (not project cards) */
+main:not(.centered) h2:not(.project-card h2) {
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+main:not(.centered) h3:not(.project-card h3) {
+    margin-top: 20px;
+    margin-bottom: 10px;
 }
 
 main p {
     margin-bottom: 20px;
-    color: #e0e0e0;
+    color: var(--color-body-text);
 }
 
 main p em {
-    color: #666 !important;
+    color: var(--color-italics) !important;
     font-style: italic;
 }
 
 main a {
-    color: #888;
+    color: var(--color-link);
     transition: color 0.2s;
 }
 
 main a:hover {
-    color: #e0e0e0;
+    color: var(--color-link-hover);
 }
 
 /* Project cards */
 .project-card {
-    border: 1px solid #222;
+    border: 1px solid var(--color-border);
     padding: 24px;
     margin-bottom: 20px;
-    background-color: #0f0f0f;
+    background-color: var(--color-bg-card);
 }
 
 .project-header {
@@ -150,28 +182,28 @@ main a:hover {
 .project-card h2 {
     font-size: 16px;
     font-weight: 400;
-    color: #fff;
+    color: var(--color-h1);
 }
 
 .project-date {
-    color: #666;
+    color: var(--color-project-date);
     font-size: 12px;
 }
 
 .project-description {
-    color: #888;
+    color: var(--color-project-description);
     margin-bottom: 12px;
     line-height: 1.5;
 }
 
 .project-link {
-    color: #666;
+    color: var(--color-project-link);
     text-decoration: none;
     font-size: 12px;
 }
 
 .project-link:hover {
-    color: #888;
+    color: var(--color-project-link-hover);
 }
 
 main ul {
@@ -181,11 +213,38 @@ main ul {
 
 main li {
     margin-bottom: 8px;
-    color: #888;
+    color: var(--color-list-item);
 }
 
 main strong {
-    color: #e0e0e0;
+    color: var(--color-strong);
+    background-color: var(--color-strong-bg);
+    padding: 2px 4px;
+    border-radius: 3px;
+}
+
+/* Tables */
+main table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+main table th,
+main table td {
+    border: 1px solid #444;
+    padding: 8px 12px;
+    text-align: left;
+}
+
+main table th {
+    background-color: #1a1a1a;
+    color: var(--color-h1);
+    font-weight: 400;
+}
+
+main table td {
+    color: var(--color-body-text);
 }
 
 /* Responsive */

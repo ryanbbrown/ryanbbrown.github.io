@@ -9,7 +9,11 @@
             <span class="project-date">{{ .date }}</span>
         </div>
         <p class="project-description">{{ .description }}</p>
-        <a href="{{ .link }}" target="_blank" class="project-link">view project →</a>
+        {{ if hasPrefix .link "http" }}
+        <a href="{{ .link }}" target="_blank" rel="noopener noreferrer" class="project-link">view project →</a>
+        {{ else }}
+        <a href="{{ .link }}" class="project-link">view project →</a>
+        {{ end }}
     </div>
     {{ end }}
 </main>

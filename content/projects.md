@@ -15,7 +15,7 @@ projects:
   - name: "Texas Datahack"
     date: "October 2022"
     description: "Data hackathon analyzing clickbait for a viral news aggregator. We won first place out of 22 teams."
-    link: "https://www.notion.so/Texas-Datahack-9cfa79384beb4a8d942a00190e344287?pvs=21"
+    link: "/texas-datahack"
 
   - name: "The Analyst: Zero to Hero"
     date: "November 2021"
@@ -25,7 +25,7 @@ projects:
   - name: "MLDS Datahack"
     date: "October 2021"
     description: "Data hackathon analyzing song success factors on Spotify. We won first place out of 15 teams."
-    link: "https://www.notion.so/MLDS-Datahack-f5333810af7b4945b560ef633f8998f8?pvs=21"
+    link: "/mlds-datahack"
 
   - name: "Content-Based Recommendation Systems"
     date: "January 2021"
@@ -35,5 +35,5 @@ projects:
   - name: "Dell Data Hackathon"
     date: "October 2020"
     description: "Data hackathon predicting COVID infection growth for the holiday season. We won first place out of 12 teams."
-    link: "https://www.notion.so/Dell-Data-Hackathon-adaae368056d4376bc2e865ffd153190?pvs=21"
+    link: "/dell-data-hackathon"
 ---
