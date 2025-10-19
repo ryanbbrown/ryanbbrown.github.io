@@ -7,6 +7,11 @@ projects:
     description: "Robust sandbox environment for deck-building games, including live multiplayer capabilities. Used to help me quickly iterate on the board game I'm creating."
     link: "https://github.com/ryanbbrown/web-deckbuilding"
 
+  - name: "ryanbbrown.com"
+    date: "October 2025"
+    description: "This portfolio site. Notion → Markdown → HTML using Hugo and notion-exporter."
+    link: "/"
+
   - name: "NextWorkout"
     date: "April 2025"
     description: "Progressive web app for workout tracking with a unique UI focusing on exercise consistency. Used to manage my chronic pain."
