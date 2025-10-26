@@ -17,6 +17,11 @@ projects:
     description: "Progressive web app for workout tracking with a unique UI focusing on exercise consistency. Fastify + Supabase + React. Used to manage my chronic pain."
     link: "https://github.com/ryanbbrown/nextworkout"
 
+  - name: "BookRank"
+    date: "August 2024"
+    description: "Beli, but for books. Web app using Django + React + Pinecone + Digital Ocean. Unfinished due to prohibitively expensive data."
+    link: "https://github.com/ryanbbrown/bookrank"
+
   - name: "Moodify"
     date: "December 2022"
     description: "Simple Spotify playlist generator based on song mood. React + Spotify OAuth + Heroku. Built before AI made it easy."
