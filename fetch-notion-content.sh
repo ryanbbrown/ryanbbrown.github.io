@@ -65,6 +65,7 @@ declare -a PAGES=(
     "29034e8e2c75800c89f8de642ff01c8b:content/now.md"
     "29134e8e2c758089accfd86410865e1b:content/books.md"
     "29134e8e2c7580b1a3f0dc77e26474f0:content/tools.md"
+    "29c34e8e2c7580d0828cecf2885bc0ec:content/learning-to-learn.md"
 )
 
 # Process each page
