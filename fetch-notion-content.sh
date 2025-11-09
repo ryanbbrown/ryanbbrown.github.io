@@ -1,79 +1,133 @@
 #!/bin/bash
 
-# Notion Export Script
-# This script fetches content from Notion and saves it to multiple markdown files
-#
-# Required environment variables:
-# - NOTION_TOKEN: Your Notion token_v2 cookie value
-# - NOTION_FILE_TOKEN: Your Notion file_token cookie value
+# Fetches a Notion "meta" page and all child pages referenced within it.
+# Usage: ./fetch-notion-meta-content.sh
+# Requires NOTION_TOKEN and NOTION_FILE_TOKEN environment variables.
 
-set -e
+set -euo pipefail
 
-# Check for required environment variables
-if [ -z "$NOTION_TOKEN" ]; then
+# Meta page containing the list of links to export
+META_PAGE_ID="29034e8e2c758016951ad78a805a9dbd"
+CONTENT_DIR="content"
+mkdir -p "$CONTENT_DIR"
+
+if [ -z "${NOTION_TOKEN:-}" ]; then
     echo "Error: NOTION_TOKEN environment variable is not set"
-    echo "Please set it with: export NOTION_TOKEN='your_token_v2_here'"
     exit 1
 fi
 
-if [ -z "$NOTION_FILE_TOKEN" ]; then
+if [ -z "${NOTION_FILE_TOKEN:-}" ]; then
     echo "Error: NOTION_FILE_TOKEN environment variable is not set"
-    echo "Please set it with: export NOTION_FILE_TOKEN='your_file_token_here'"
     exit 1
 fi
 
-# Function to process a Notion page and convert to Hugo markdown
-# Args: $1 = page_id, $2 = output_file
+convert_markdown_to_hugo() {
+    local src="$1"
+    local dst="$2"
+
+    if grep -q '^# ' "$src"; then
+        local title
+        title=$(grep -m 1 '^# ' "$src" | sed 's/^# //')
+        local escaped_title
+        escaped_title=${title//\"/\\\"}
+
+        {
+            echo "---"
+            echo "title: \"$escaped_title\""
+            echo "---"
+            echo ""
+            awk 'BEGIN {removed=0} {
+                if (!removed && /^# /) {removed=1; next}
+                print
+            }' "$src"
+        } > "$dst"
+    else
+        cp "$src" "$dst"
+    fi
+}
+
 process_notion_page() {
     local page_id="$1"
     local output_file="$2"
-    local temp_file="/tmp/notion-export-${page_id}.md"
+    local temp_file
+    temp_file=$(mktemp)
+    local attempt=1
+    local max_attempts=3
 
-    echo "Fetching content from Notion page: $page_id -> $output_file"
+    echo "Fetching Notion page $page_id -> $output_file"
+    until notion-exporter "$page_id" -t md > "$temp_file"; do
+        if [ "$attempt" -ge "$max_attempts" ]; then
+            echo "Error: Failed to fetch page $page_id after $max_attempts attempts"
+            rm -f "$temp_file"
+            return 1
+        fi
+        echo "Retrying ($attempt/$max_attempts)..."
+        attempt=$((attempt + 1))
+        sleep 2
+    done
 
-    # Export the page as markdown to a temporary file
-    notion-exporter "$page_id" -t md > "$temp_file"
-
-    # Post-process: Convert first H1 to Hugo frontmatter
-    if grep -q '^# ' "$temp_file"; then
-        # Extract the first H1 line and remove the "# " prefix
-        TITLE=$(grep -m 1 '^# ' "$temp_file" | sed 's/^# //')
-
-        # Remove only the first H1 line and add frontmatter
-        {
-            echo "---"
-            echo "title: \"$TITLE\""
-            echo "---"
-            echo ""
-            awk 'NR==1,/^# / {if (/^# /) next} {print}' "$temp_file"
-        } > "$output_file"
-    else
-        # No H1 found, just copy the content
-        cp "$temp_file" "$output_file"
-    fi
-
-    rm "$temp_file"
-    echo "✓ Content successfully written to $output_file"
+    convert_markdown_to_hugo "$temp_file" "$output_file"
+    rm -f "$temp_file"
+    echo "✓ Saved $output_file"
+    sleep 1
 }
 
-# Define your pages here as: "page_id:output_file"
-# Get the page ID from your Notion URL: notion.so/Page-Title-<PAGE_ID>
-declare -a PAGES=(
-    "adaae368056d4376bc2e865ffd153190:content/dell-data-hackathon.md"
-    "f5333810af7b4945b560ef633f8998f8:content/mlds-datahack.md"
-    "9cfa79384beb4a8d942a00190e344287:content/texas-datahack.md"
-    "29034e8e2c75800c89f8de642ff01c8b:content/now.md"
-    "29134e8e2c758089accfd86410865e1b:content/books.md"
-    "29134e8e2c7580b1a3f0dc77e26474f0:content/tools.md"
-    "29c34e8e2c7580d0828cecf2885bc0ec:content/learning-to-learn.md"
+meta_temp_file=$(mktemp)
+meta_list_file=$(mktemp)
+cleanup() {
+    rm -f "$meta_temp_file" "$meta_list_file"
+}
+trap cleanup EXIT
+
+notion-exporter "$META_PAGE_ID" -t md > "$meta_temp_file"
+convert_markdown_to_hugo "$meta_temp_file" "$CONTENT_DIR/meta-page.md"
+echo "Meta page saved to $CONTENT_DIR/meta-page.md"
+
+# Only inspect the portion of the meta page above END-PAGELIST
+sed '/^END-PAGELIST/q' "$meta_temp_file" > "$meta_list_file"
+
+declare -a processed_page_ids=()
+child_pages_found=0
+
+while IFS=$'\t' read -r page_name page_id; do
+    child_pages_found=1
+    [ -z "$page_id" ] && continue
+
+    page_already_processed=false
+    if [ "${#processed_page_ids[@]}" -gt 0 ]; then
+        for existing_id in "${processed_page_ids[@]}"; do
+            if [ "$existing_id" = "$page_id" ]; then
+                page_already_processed=true
+                break
+            fi
+        done
+    fi
+    if [ "$page_already_processed" = true ]; then
+        echo "Skipping duplicate entry for $page_name ($page_id)"
+        continue
+    fi
+    processed_page_ids+=("$page_id")
+
+    page_name=$(echo "$page_name" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+    safe_name=$(printf "%s" "$page_name" | tr '[:upper:]' '[:lower:]')
+    safe_name=$(printf "%s" "$safe_name" | tr -s '[:space:]' '-')
+    safe_name=${safe_name//\//-}
+    output_file="$CONTENT_DIR/$safe_name.md"
+
+    process_notion_page "$page_id" "$output_file"
+done < <(
+    perl -ne '
+        while (/\[([^\]]+)\]\([^)]*([0-9a-f]{32})[^)]*\)/g) {
+            my $name = $1;
+            $name =~ s/^\s+|\s+$//g;
+            print "$name\t$2\n";
+        }
+    ' "$meta_list_file"
 )
 
-# Process each page
-for page_entry in "${PAGES[@]}"; do
-    # Split on colon to get page_id and output_file
-    IFS=':' read -r page_id output_file <<< "$page_entry"
-    process_notion_page "$page_id" "$output_file"
-done
+if [ "$child_pages_found" -eq 0 ]; then
+    echo "No child pages found before END-PAGELIST; nothing else to fetch."
+    exit 0
+fi
 
-echo ""
-echo "All pages processed successfully!"
+echo "All child pages fetched successfully."

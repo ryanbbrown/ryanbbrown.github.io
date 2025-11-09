@@ -17,3 +17,6 @@ resources/_gen/
 # Notion-generated content (everything except projects.md)
 content/*
 !content/projects.md
+
+# agent markdown file
+AGENTS.md
