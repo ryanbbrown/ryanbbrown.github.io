@@ -2,6 +2,11 @@
 title: "projects"
 layout: "projects"
 projects:
+  - name: "On-demand Kindle Audiobooks"
+    date: "In progress"
+    description: "iOS app that generates on-demand audiobook snippets using AI. Downloads book content and auto-syncs reading position using reverse-engineered Kindle API. Swift (app) + Fastify (server) + Python (OCR) + Go (TLS client)."
+    link: "https://github.com/ryanbbrown/kindle-ai-audiobook"
+
   - name: "Web Deckbuilding"
     date: "In progress"
     description: "Robust sandbox environment for deck-building games, including live multiplayer capabilities. Zustand + Redis + React. Used to help me quickly iterate on the board game I'm creating."
