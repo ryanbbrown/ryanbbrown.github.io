@@ -4,18 +4,18 @@ layout: "projects"
 projects:
   - name: "On-demand Kindle Audiobooks"
     date: "In progress"
-    description: "iOS app that generates on-demand audiobook snippets using AI. Downloads book content and auto-syncs reading position using reverse-engineered Kindle API. Swift (app) + Fastify (server) + Python (OCR) + Go (TLS client)."
+    description: "iOS app that generates on-demand audiobook snippets using AI. Downloads book content and auto-syncs reading position using reverse-engineered Kindle API. Swift (app) + Fastify (server) + Python (content deobfuscation)."
     link: "https://github.com/ryanbbrown/kindle-ai-audiobook"
-
-  - name: "Web Deckbuilding"
-    date: "In progress"
-    description: "Robust sandbox environment for deck-building games, including live multiplayer capabilities. Zustand + Redis + React. Used to help me quickly iterate on the board game I'm creating."
-    link: "https://github.com/ryanbbrown/web-deckbuilding"
 
   - name: "ryanbbrown.com"
     date: "October 2025"
     description: "This portfolio site. Notion → Markdown → HTML using Hugo and notion-exporter."
     link: "https://github.com/ryanbbrown/ryanbbrown.github.io"
+
+  - name: "Web Deckbuilding"
+    date: "August 2025"
+    description: "Sandbox environment for deck-building games with support for live multiplayer. Includes full eng pipeline (CI/CD, semantic versioning, multi-env deploys). Zustand + Redis + React. Used to help me quickly iterate on the board game I'm creating."
+    link: "https://github.com/ryanbbrown/web-deckbuilding"
 
   - name: "NextWorkout"
     date: "April 2025"
