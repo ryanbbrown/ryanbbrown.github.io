@@ -63,13 +63,13 @@ process_notion_page() {
         fi
         echo "Retrying ($attempt/$max_attempts)..."
         attempt=$((attempt + 1))
-        sleep 10
+        sleep 60
     done
 
     convert_markdown_to_hugo "$temp_file" "$output_file"
     rm -f "$temp_file"
     echo "✓ Saved $output_file"
-    sleep 1
+    sleep 10
 }
 
 meta_temp_file=$(mktemp)
