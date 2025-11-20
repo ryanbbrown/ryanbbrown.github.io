@@ -63,7 +63,7 @@ process_notion_page() {
         fi
         echo "Retrying ($attempt/$max_attempts)..."
         attempt=$((attempt + 1))
-        sleep 2
+        sleep 10
     done
 
     convert_markdown_to_hugo "$temp_file" "$output_file"
