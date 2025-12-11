@@ -2,10 +2,15 @@
 title: "projects"
 layout: "projects"
 projects:
-  - name: "On-demand Kindle Audiobooks"
-    date: "In progress"
+  - name: "Reveal.js Skill"
+    date: "December 2025"
+    description: "Claude Code skill for generating professional presentations in Reveal.js (HTML presentation framework)."
+    link: "https://github.com/ryanbbrown/revealjs-skill"
+
+  - name: "Kindle Storyteller"
+    date: "November 2025"
     description: "iOS app that generates on-demand audiobook snippets using AI. Downloads book content and auto-syncs reading position using reverse-engineered Kindle API. Swift (app) + Fastify (server) + Python (content deobfuscation)."
-    link: "https://github.com/ryanbbrown/kindle-ai-audiobook"
+    link: "https://github.com/ryanbbrown/kindle-storyteller"
 
   - name: "ryanbbrown.com"
     date: "October 2025"
@@ -19,7 +24,7 @@ projects:
 
   - name: "NextWorkout"
     date: "April 2025"
-    description: "Progressive web app for workout tracking with a unique UI focusing on exercise consistency. Fastify + Supabase + React. Used to manage my chronic pain."
+    description: "Progressive web app for workout tracking with a unique UI focusing on exercise consistency. Fastify + React. Used to manage my chronic pain."
     link: "https://github.com/ryanbbrown/nextworkout"
 
   - name: "BookRank"
