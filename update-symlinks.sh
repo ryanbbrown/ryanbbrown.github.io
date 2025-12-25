@@ -1,8 +1,7 @@
 #!/bin/bash
 # Syncs markdown files between a target directory and the content folder
-# 1. Moves non-symlinked .md files from target to content/
+# 1. Moves non-symlinked .md files from target to content/, creates symlink back
 # 2. Deletes content files whose symlinks were removed from target
-# 3. Creates symlinks in target pointing to each .md file in content/
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 CONTENT_DIR="$SCRIPT_DIR/content"
@@ -19,13 +18,14 @@ if [ ! -d "$TARGET_DIR" ]; then
     exit 1
 fi
 
-# Move non-symlinked .md files from target to content
+# Move non-symlinked .md files from target to content, create symlink back
 for file in "$TARGET_DIR"/*.md; do
     [ -e "$file" ] || continue
     if [ ! -L "$file" ]; then
         filename=$(basename "$file")
         mv "$file" "$CONTENT_DIR/$filename"
-        echo "Moved: $file -> $CONTENT_DIR/$filename"
+        ln -s "$CONTENT_DIR/$filename" "$TARGET_DIR/$filename"
+        echo "Moved and symlinked: $filename"
     fi
 done
 
@@ -35,14 +35,6 @@ for file in "$CONTENT_DIR"/*.md; do
     filename=$(basename "$file")
     if [ ! -e "$TARGET_DIR/$filename" ]; then
         rm "$file"
-        echo "Deleted: $file (symlink removed)"
+        echo "Deleted: $filename"
     fi
-done
-
-# Create symlinks for all .md files in content
-for file in "$CONTENT_DIR"/*.md; do
-    [ -e "$file" ] || continue
-    filename=$(basename "$file")
-    ln -sf "$file" "$TARGET_DIR/$filename"
-    echo "Symlinked: $TARGET_DIR/$filename -> $file"
 done
