@@ -2,6 +2,8 @@
 <main>
     <h1>{{ .Title }}</h1>
 
+    {{ with .Content }}<div class="page-content">{{ . }}</div>{{ end }}
+
     {{ range .Params.projects }}
     <div class="project-card">
         <div class="project-header">

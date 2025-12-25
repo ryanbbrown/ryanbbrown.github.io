@@ -2,25 +2,35 @@
 title: "projects"
 layout: "projects"
 projects:
-  - name: "Reveal.js Skill"
-    date: "December 2025"
-    description: "Claude Code skill for generating professional presentations in Reveal.js (HTML presentation framework)."
-    link: "https://github.com/ryanbbrown/revealjs-skill"
+  - name: "obsidian-claude-code"
+    date: "In progress"
+    description: "Obsidian plugin to add AI features powered by Claude Code--no extra subscription or API key necessary."
+    link: "https://github.com/ryanbbrown/obsidian-claude-code"
 
   - name: "Kindle Storyteller"
     date: "November 2025"
     description: "iOS app that generates on-demand audiobook snippets using AI. Downloads book content and auto-syncs reading position using reverse-engineered Kindle API. Swift (app) + Fastify (server) + Python (content deobfuscation)."
     link: "https://github.com/ryanbbrown/kindle-storyteller"
 
-  - name: "ryanbbrown.com"
-    date: "October 2025"
-    description: "This portfolio site. Notion → Markdown → HTML using Hugo and notion-exporter."
-    link: "https://github.com/ryanbbrown/ryanbbrown.github.io"
+  - name: "Reveal.js Skill"
+    date: "December 2025"
+    description: "Claude Code skill for generating professional presentations in Reveal.js (HTML presentation framework)."
+    link: "https://github.com/ryanbbrown/revealjs-skill"
 
   - name: "Web Deckbuilding"
     date: "August 2025"
     description: "Sandbox environment for deck-building games with support for live multiplayer. Includes full eng pipeline (CI/CD, semantic versioning, multi-env deploys). Zustand + Redis + React. Used to help me quickly iterate on the board game I'm creating."
     link: "https://github.com/ryanbbrown/web-deckbuilding"
+
+  - name: "Chrome Tab Group Manager"
+    date: "December 2025"
+    description: "Simple Chrome extension to import/export tabs as JSON. Used to easily sync between different chrome profiles (work vs. personal)."
+    link: "https://github.com/ryanbbrown/chrome-tab-groups-exporter?tab=readme-ov-file"
+
+  - name: "ryanbbrown.com"
+    date: "October 2025"
+    description: "This portfolio site. Notion → Markdown → HTML using Hugo and notion-exporter."
+    link: "https://github.com/ryanbbrown/ryanbbrown.github.io"
 
   - name: "NextWorkout"
     date: "April 2025"
@@ -72,3 +82,4 @@ projects:
     description: "Data hackathon predicting COVID infection growth for the holiday season. We won first place out of 12 teams."
     link: "/dell-data-hackathon"
 ---
+*Roughly ordered by date and/or importance*
