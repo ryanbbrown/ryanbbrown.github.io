@@ -11,7 +11,7 @@ I mostly read science fiction and fantasy. I sometimes diversify, but as mention
 | --------------------------------- | ---------------------- | ----------- | -------------- | -------- |
 | The Kingkiller Chronicle          | Patrick Rothfuss       | 2*          | 2              | S+       |
 | Foundation                        | Isaac Asimov           | 3*          | 3              | S        |
-| Hierarchy                         | James Islington        | 1*          | 1              | S        |
+| Hierarchy                         | James Islington        | 2*          | 1              | S        |
 | Teixcalaan                        | Arkady Martine         | 2*          | 2              | S        |
 | The Broken Earth                  | N.K. Jemisin           | 3           | 3              | S        |
 | The Stormlight Archive            | Brandon Sanderson      | 5*          | 5              | S        |
