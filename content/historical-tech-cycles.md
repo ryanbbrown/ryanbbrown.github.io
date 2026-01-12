@@ -1,7 +1,7 @@
 ---
 
 ---
-*Created as an addendum to my blog post on the AI bubble; see here. *
+*Created as an addendum to my blog post on the AI bubble; see [here](https://blog.ryanbbrown.com/p/thoughts-on-the-ai-bubble).*
 
 ## Infrastructure Buildouts
 

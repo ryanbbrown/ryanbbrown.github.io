@@ -5,7 +5,7 @@
 
 I mostly read science fiction and fantasy. I sometimes diversify, but as mentioned in [now](/now), I have the lofty goal of reading every major fantasy/sci-fi series ever written (from [r/fantasy](https://www.reddit.com/r/Fantasy/comments/1jjif55/rfantasy_top_novels_2025_results/)). I read on a Kindle Paperwhite when possible and my phone otherwise.
 
-**Current Total**: 148 books
+**Current Total**: 149 books
 
 | **Series / Book Name**            | **Author**             | **# Books** | **# Finished** | **Tier** |
 | --------------------------------- | ---------------------- | ----------- | -------------- | -------- |
@@ -30,6 +30,7 @@ I mostly read science fiction and fantasy. I sometimes diversify, but as mention
 | Gone Girl                         | Gillian Flynn          |             |                | B        |
 | Hello Beautiful                   | Ann Napolitano         |             |                | B        |
 | Kindred                           | Octavia E. Butler      |             |                | B        |
+| Sharp Objects                     | Gillian Flynn          |             |                | B        |
 | Six of Crows                      | Leigh Bardugo          | 2           | 2              | B        |
 | The Firewall Trilogy              | James Maxwell          | 3           | 2              | B        |
 | The Fountainhead                  | Ayn Rand               |             |                | B        |
