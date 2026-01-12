@@ -3,6 +3,7 @@
 ---
 *Created as an addendum to my blog post on the AI bubble; see [here](https://blog.ryanbbrown.com/p/thoughts-on-the-ai-bubble).*
 
+# Historical Tech Cycles
 ## Infrastructure Buildouts
 
 **Railroad** (early 1870s)

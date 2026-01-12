@@ -1,6 +1,8 @@
 ---
 
 ---
+# tools
+
 *Last updated: January 11, 2026*
 
 I care a lot about the tools I use and frequently try out new ones or try to optimize my existing tools. 

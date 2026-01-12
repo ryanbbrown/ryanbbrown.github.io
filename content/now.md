@@ -1,6 +1,8 @@
 ---
 
 ---
+# now
+
 *Last updated: January 11, 2026*
 
 [nownownow.com/about](https://nownownow.com/about)
@@ -9,7 +11,8 @@ I live in New York City and work at Blackstone as a Data Scientist, focused on b
 
 I'm currently working on:
 
-- Obsidian plugin that adds AI features powered directly by Claude Code 
+- Obsidian plugin that adds AI features powered directly by Claude Code
+- Desktop app for an always-on-top AI companion window, compatible with ChatGPT, Claude, and Gemini 
 - Agent that provides strategy analysis on Dominion kingdoms, to be deployed in the official discord server
 	- A kingdom is the set of ~12 cards to be used in a particular game, there are $>10^{22}$ distinct possibilities
 - AI-powered art redesign of one of my favorite games, Race for the Galaxy

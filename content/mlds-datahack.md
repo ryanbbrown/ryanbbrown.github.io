@@ -1,6 +1,7 @@
 ---
 cover: "[[MLDS Datahack.png]]"
 ---
+# MLDS Datahack
 ## 🏅 Competition Overview
 
 MLDS Datahack was hosted by MLDS (Machine Learning & Data Science), an organization at UT Austin, and was sponsored by Oracle and Chevron. It was hosted in October 2021. Participation was open to all students, and 15 teams competed. My team received first place.

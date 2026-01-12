@@ -1,6 +1,8 @@
 ---
 
 ---
+# Learning to learn
+
 *Published: Oct 21, 2024*
 
 *Originally posted by *[*Kevin Li*](https://www.linkedin.com/in/jklmli/)* at *[*https://kevin.the.li/posts/learning-to-learn/*](https://kevin.the.li/posts/learning-to-learn/)*, reposted here because the link is a bit broken (as of 10/29/2025) and I reference it in my article Thoughts on the AI bubble *

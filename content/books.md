@@ -1,6 +1,8 @@
 ---
 
 ---
+# books
+
 *Last updated: December 25, 2025*
 
 I mostly read science fiction and fantasy. I sometimes diversify, but as mentioned in [now](/now), I have the lofty goal of reading every major fantasy/sci-fi series ever written (from [r/fantasy](https://www.reddit.com/r/Fantasy/comments/1jjif55/rfantasy_top_novels_2025_results/)). I read on a Kindle Paperwhite when possible and my phone otherwise.

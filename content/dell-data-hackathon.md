@@ -1,6 +1,7 @@
 ---
 cover: "[[Dell Data Hackathon.png]]"
 ---
+# Dell Data Hackathon
 ## 🏅 Competition Overview
 
 The Dell Data Hackathon was hosted by MISA (Management Information Systems Association) and NOBE (National Organization for Business and Engineering) on October 18, 2020, and was sponsored by Dell. Participation was open to all students, and 12 teams competed. My team received first place.

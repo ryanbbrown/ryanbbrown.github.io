@@ -1,6 +1,7 @@
 ---
 cover: "[[Texas Datahack.jpeg]]"
 ---
+# Texas Datahack
 ## 🏅 Competition Overview
 
 Texas Datahack was co-hosted by MLDS (Machine Learning & Data Science) and Texas Convergent, two organizations at UT Austin, and was sponsored by Oracle and Chevron. It took place in October 2022. Participation was open to all students, and 22 teams competed. We had ~6.5 hours from receiving the challenge information to presentation submission. My team received first place. 
