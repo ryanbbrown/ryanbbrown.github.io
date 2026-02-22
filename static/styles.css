@@ -440,7 +440,16 @@ main table td {
     }
 
     .bento-headshot {
-        justify-content: flex-start;
+        justify-content: center;
+    }
+
+    .bento-intro {
+        align-items: center;
+        text-align: center;
+    }
+
+    .bento-intro .links {
+        justify-content: center;
     }
 
     .bento-projects {
