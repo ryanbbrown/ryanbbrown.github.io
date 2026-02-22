@@ -437,15 +437,19 @@ main table td {
 
     .bento-hero {
         grid-template-columns: 1fr;
+        gap: 0;
     }
 
     .bento-headshot {
         justify-content: center;
+        padding: 0;
+        padding-top: 20px;
     }
 
     .bento-intro {
         align-items: center;
         text-align: center;
+        padding: 10px 0 20px;
     }
 
     .bento-intro .links {
