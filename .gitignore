@@ -16,3 +16,4 @@ resources/_gen/
 
 # agent markdown file
 AGENTS.md
+.gstack/
