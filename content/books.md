@@ -3,17 +3,17 @@
 ---
 # books
 
-*Last updated: December 25, 2025*
+*Last updated: June 26, 2026*
 
 I mostly read science fiction and fantasy. I sometimes diversify, but as mentioned in [now](/now), I have the lofty goal of reading every major fantasy/sci-fi series ever written (from [r/fantasy](https://www.reddit.com/r/Fantasy/comments/1jjif55/rfantasy_top_novels_2025_results/)). I read on a Kindle Paperwhite when possible and my phone otherwise.
 
-**Current Total**: 149 books
+**Current Total**: 151 books
 
 | **Series / Book Name**            | **Author**             | **# Books** | **# Finished** | **Tier** |
 | --------------------------------- | ---------------------- | ----------- | -------------- | -------- |
 | The Kingkiller Chronicle          | Patrick Rothfuss       | 2*          | 2              | S+       |
 | Foundation                        | Isaac Asimov           | 3*          | 3              | S        |
-| Hierarchy                         | James Islington        | 2*          | 1              | S        |
+| Hierarchy                         | James Islington        | 2           | 2              | S-?      |
 | Teixcalaan                        | Arkady Martine         | 2*          | 2              | S        |
 | The Broken Earth                  | N.K. Jemisin           | 3           | 3              | S        |
 | The Stormlight Archive            | Brandon Sanderson      | 5*          | 5              | S        |
@@ -23,7 +23,9 @@ I mostly read science fiction and fantasy. I sometimes diversify, but as mention
 | Realm of the Elderlings           | Robin Hobb             | 16          | 16             | A        |
 | Red Rising                        | Pierce Brown           | 6*          | 6              | A        |
 | Remembrance of Earth’s Past       | Cixin Liu              | 3           | 3              | A        |
+| Sun Eater                         | Christopher Ruocchio   | 7           | 2              | A        |
 | The First Law                     | Joe Abercrombie        | 3           | 3              | A        |
+| The Sirens of Titan               | Kurt Vonnegut          |             |                | A        |
 | A Song of Ice and Fire            | George R. R. Martin    | 5*          | 2              | B        |
 | Children of Time                  | Adrian Tchaikovsky     | 3           | 2              | B        |
 | Deacon King Kong                  | James McBride          |             |                | B        |
