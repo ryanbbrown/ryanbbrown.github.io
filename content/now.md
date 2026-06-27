@@ -19,7 +19,7 @@ I'm currently working on:
 A few things I like:
 
 - **Reading:** booklist [here](/books)
-- **Board Games:** gamelog WIP
+- **Board Games:** gamelog [here](/gamelog)
 
 I have the unreasonable goal of reading every major fantasy/sci-fi series ever written (as per the list from [r/fantasy](https://www.reddit.com/r/Fantasy/comments/1jjif55/rfantasy_top_novels_2025_results/)), I recently finished the 16-book Realm of the Elderlings series by Robin Hobb. Currently reading Demon in White, the third book in the Sun Eater series by Christopher Ruocchio.
 

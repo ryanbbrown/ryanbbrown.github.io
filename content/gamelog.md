@@ -1,0 +1,36 @@
+# gamelog
+
+*Last updated: June 26, 2026*
+
+| Game                                                                                            | Tier | # Plays | Notes                                                                                                                                             |
+| ----------------------------------------------------------------------------------------------- | ---- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Dominion](https://boardgamegeek.com/boardgame/36218/dominion)                                  | S+   | 500+    | My favorite game, each play is unique and it's perfectly strategic. Best as 1v1 played on dominion.games, irl takes way longer                    |
+| [Brass Birmingham](https://boardgamegeek.com/boardgame/224517/brass-birmingham)                 | S+   | 3       | #1 on BGG for a reason, great ratio of strategy + tactics + player interaction                                                                    |
+| [Sigil](https://boardgamegeek.com/boardgame/358736/sigil)                                       | S    | 10+     | A bit like chess/go but easier to pick up, best played with a chess timer                                                                         |
+| [Race for the Galaxy](https://boardgamegeek.com/boardgame/28143/race-for-the-galaxy)            | S    | 8       | Best tableau builder, pure and tight. Art leaves a lot to be desired though                                                                       |
+| [Terraforming Mars](https://boardgamegeek.com/boardgame/167791/terraforming-mars)               | S    | 4       | Great engine builder, lots of mechanics and stuff going on but it ties together well. Sort of "multiplayer solitaire" but I personally don't mind |
+| [Hegemony](https://boardgamegeek.com/boardgame/321608/hegemony-lead-your-class-to-victory)      | S    | 2       | Really fun asymmetric economic/political game, pretty unique                                                                                      |
+| [Agricola](https://boardgamegeek.com/boardgame/31260/agricola)                                  | A+   | 2       | Best classic worker placement game                                                                                                                |
+| [El Grande](https://boardgamegeek.com/boardgame/93/el-grande)                                   | A+   | 1       | The best proper area control game                                                                                                                 |
+| [The Old King's Crown](https://boardgamegeek.com/boardgame/357873/the-old-kings-crown)          | A+   | 0.5     | Awaiting a full playthrough but the art is great and very cool combat mechanics                                                                   |
+| [Crew: Mission Deep Sea](https://boardgamegeek.com/boardgame/324856/the-crew-mission-deep-sea)  | A    | 10+     | Fun quick cooperative trick-taking, not a primary game though usually just a few quick rounds                                                     |
+| [Spirit Island](https://boardgamegeek.com/boardgame/162886/spirit-island)                       | A    | 4       | Really good game but takes too long and not as satisfying as competitive games                                                                    |
+| [Pax Pamir](https://boardgamegeek.com/boardgame/256960/pax-pamir-second-edition)                | A    | 2       | Cool and very unique, feels a bit random but might just need more plays to grasp the strategy                                                     |
+| [Gudnak](https://boardgamegeek.com/boardgame/354923/gudnak)                                     | A    | 1       | Really cool just takes a while to set up decks and if your deck is bad you're cooked, cool that it suppoed 3p/4p but is a bit too chaotic         |
+| [Dune Imperium](https://boardgamegeek.com/boardgame/316554/dune-imperium)                       | B    | 5       | Used to be my group's favorite game but takes a really long time and is too RNG due to intrigues                                                  |
+| [Tyrants of the Underdark](https://boardgamegeek.com/boardgame/189932/tyrants-of-the-underdark) | B    | 4       | Combines deckbuilding and area control, two amazing mechanics, but execution/balance is lackluster                                                |
+| [Azul](https://boardgamegeek.com/boardgame/230802/azul)                                         | B    | 4       | Simple but surprisingly strategic with super direct player interaction                                                                            |
+| [Scythe](https://boardgamegeek.com/boardgame/169786/scythe)                                     | B    | 3       | Liked it at first you can do some planning and engine but the board barely matters and too much going on, scoring medley                          |
+| [7 Wonders](https://boardgamegeek.com/boardgame/68448/7-wonders)                                | C    | 7       | Quick and fun + scales to higher player counts, very tactical rather than strategic though                                                        |
+| [Decorum](https://boardgamegeek.com/boardgame/344554/decorum)                                   | C    | 6       | Best at 2p played with a partner                                                                                                                  |
+| [5-Minute Dungeon](https://boardgamegeek.com/boardgame/207830/5-minute-dungeon)                 | C    | 5       | Fun fast-paced cooperative game, easy to pick up for people that don't play games                                                                 |
+| [Blood Rage](https://boardgamegeek.com/boardgame/170216/blood-rage)                             | C    | 3       | Fun with lots of combat + interaction but scoring is swingy and feels like it doesn't match how the game is actually going                        |
+| [Viticulture](https://boardgamegeek.com/boardgame/183394/viticulture-essential-edition)         | C    | 2       | Everyone is kind of doing the same thing / has the same strategy                                                                                  |
+| [Eschaton](https://boardgamegeek.com/boardgame/206299/eschaton)                                 | C    | 1       | Another deckbuilding + area control but not very balanced/polished, great art                                                                     |
+| [Gizmos](https://boardgamegeek.com/boardgame/246192/gizmos)                                     | C    | 1       | More casual                                                                                                                                       |
+
+**Wishlist**
+- [Ark Nova](https://boardgamegeek.com/boardgame/342942/ark-nova)
+- [SETI](https://boardgamegeek.com/boardgame/418059/seti-search-for-extraterrestrial-intelligence)
+- [Barrage](https://boardgamegeek.com/boardgame/251247/barrage)
+- [Food Chain Magnate](https://boardgamegeek.com/boardgame/175914/food-chain-magnate)

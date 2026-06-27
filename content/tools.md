@@ -3,9 +3,13 @@
 ---
 # tools
 
-*Last updated: January 11, 2026*
+*Last updated: April 12, 2026*
 
 I care a lot about the tools I use and frequently try out new ones or try to optimize my existing tools. 
+
+## INTEGRATE
+- chat w webpage - gemini, option+G
+- public git repos - explaingithub.com (only at owrk when i don't have ide though so not that relevant)
 
 ## Development
 
@@ -23,7 +27,8 @@ I care a lot about the tools I use and frequently try out new ones or try to opt
 
 ## General Productivity
 
-- [Obsidian](https://obsidian.md/): I recently switched over from Notion; the (relatively) new [bases](https://help.obsidian.md/bases) feature on Obsidian is a fine replacement for Notion databases, and being markdown-native makes it much better for AI editing (see my [blog post](https://blog.ryanbbrown.com/p/ai-will-never-master-powerpoint) on LLM native formats).
+- [Obsidian](https://obsidian.md/): I switched over from Notion last year; the (relatively) new [bases](https://help.obsidian.md/bases) feature on Obsidian is a fine replacement for Notion databases, and being markdown-native makes it much better for AI editing (see my [blog post](https://blog.ryanbbrown.com/p/ai-will-never-master-powerpoint) on LLM native formats).
+- [Readwise Reader](https://readwise.io/read): FILL THIS OUT
 - [Google Chrome](https://www.google.com/chrome/): I’m not a stickler for security and Chrome is familiar. I don’t think I have a strong use case for an AI browser (yet). 
 - [Charmstone](https://charmstone.app/): App switcher / launcher. Having essentially one keyboard shortcut to access 8 different apps is convenient and heavily satisfying for my keyboard shortcut obsession.
 - [Maccy](https://maccy.app/): Clipboard history. Not having to go back and re-copy text comes in handy more often than you’d think.
