@@ -27,6 +27,7 @@
 | [Blood Rage](https://boardgamegeek.com/boardgame/170216/blood-rage)                             | C    | 3       | Fun with lots of combat + interaction but scoring is swingy and feels like it doesn't match how the game is actually going                        |
 | [Viticulture](https://boardgamegeek.com/boardgame/183394/viticulture-essential-edition)         | C    | 2       | Everyone is kind of doing the same thing / has the same strategy                                                                                  |
 | [Eschaton](https://boardgamegeek.com/boardgame/206299/eschaton)                                 | C    | 1       | Another deckbuilding + area control but not very balanced/polished, great art                                                                     |
+| [Oath](https://boardgamegeek.com/boardgame/291572/oath)                                         | C    | 1       | Great art and cool mechanics but too random for how long it takes / how complicated it is                                                         |
 | [Gizmos](https://boardgamegeek.com/boardgame/246192/gizmos)                                     | C    | 1       | More casual                                                                                                                                       |
 
 **Wishlist**
