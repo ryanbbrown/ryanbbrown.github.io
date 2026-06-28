@@ -409,6 +409,41 @@ main table td {
     color: var(--color-link-hover);
 }
 
+/* Tier list buttons */
+.tierlist-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+}
+
+.tierlist-btn {
+    border: 1px solid var(--color-border);
+    background-color: var(--color-bg-card);
+    padding: 18px 24px;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+    transition: border-color 0.2s, background-color 0.2s;
+}
+
+.tierlist-btn:hover {
+    border-color: #444;
+    background-color: #161616;
+}
+
+.tierlist-btn .tierlist-label {
+    color: var(--color-h1);
+    font-size: 15px;
+}
+
+.tierlist-btn .tierlist-sub {
+    color: var(--color-project-description);
+    font-size: 11px;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     header {
