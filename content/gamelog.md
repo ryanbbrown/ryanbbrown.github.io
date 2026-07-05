@@ -1,6 +1,6 @@
 # gamelog
 
-*Last updated: June 26, 2026*
+*Last updated: July 5, 2026*
 
 | Game                                                                                            | Tier | # Plays | Notes                                                                                                                                             |
 | ----------------------------------------------------------------------------------------------- | ---- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -10,6 +10,7 @@
 | [Race for the Galaxy](https://boardgamegeek.com/boardgame/28143/race-for-the-galaxy)            | S    | 8       | Best tableau builder, pure and tight. Art leaves a lot to be desired though                                                                       |
 | [Terraforming Mars](https://boardgamegeek.com/boardgame/167791/terraforming-mars)               | S    | 4       | Great engine builder, lots of mechanics and stuff going on but it ties together well. Sort of "multiplayer solitaire" but I personally don't mind |
 | [Hegemony](https://boardgamegeek.com/boardgame/321608/hegemony-lead-your-class-to-victory)      | S    | 2       | Really fun asymmetric economic/political game, pretty unique                                                                                      |
+| [Age of Steam](https://boardgamegeek.com/boardgame/4098/age-of-steam)                           | S    | 1       | Mechanically simple and elegant but strategically complex, super fun interaction and scaling, expecting more plays                                |
 | [Agricola](https://boardgamegeek.com/boardgame/31260/agricola)                                  | A+   | 2       | Best classic worker placement game                                                                                                                |
 | [El Grande](https://boardgamegeek.com/boardgame/93/el-grande)                                   | A+   | 1       | The best proper area control game                                                                                                                 |
 | [The Old King's Crown](https://boardgamegeek.com/boardgame/357873/the-old-kings-crown)          | A+   | 0.5     | Awaiting a full playthrough but the art is great and very cool combat mechanics                                                                   |
