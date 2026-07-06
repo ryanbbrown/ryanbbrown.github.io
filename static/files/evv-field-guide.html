@@ -1,0 +1,1204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>An FDE's Field Guide to EVV Data</title>
+<meta name="description" content="The operational semantics of home-care EVV (electronic visit verification) data: six federal concepts, four real vendor dialects, and the judgments the divergences force. Built from the published specs.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fragment+Mono&family=Manrope:wght@400;500;600;700;800&family=Roboto+Serif:ital,opsz,wght@1,8..144,400..500&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* Zingage brand palette (zingage.com): warm off-white ground, navy ink,
+     orange accent; green reserved for positive/affirmative marks. */
+  --bg: #fefdfb;
+  --surface: #ffffff;
+  --ink: #181d27;
+  --muted: #535861;
+  --faint: #878c94;
+  --line: #e4e5e8;
+  --line-soft: #efeff1;
+  --accent: #ff6b02;
+  --accent-ink: #bc4e00;
+  --accent-bg: #fff4ec;
+  --accent-line: #ffd8b8;
+  --accent-contrast: #ffffff;
+  --ok: #069454;
+  --warn-ink: #92400e;
+  --warn-bg: #fffbeb;
+  --warn-line: #fde68a;
+  --code-bg: #f5f3f0;
+  --pre-bg: #181d27;
+  --pre-ink: #e2e3e6;
+  --pre-faint: #82868e;
+  --pre-hl: rgba(255, 133, 52, 0.15);
+  --pre-hl-line: #ff8534;
+  --sans: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --serif: "Roboto Serif", Georgia, "Times New Roman", serif;
+  --mono: "Fragment Mono", ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; color-scheme: light; scroll-behavior: smooth; scroll-padding-top: 62px; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+}
+.wrap { max-width: 1060px; margin: 0 auto; padding: 0 20px; }
+.prose { max-width: 72ch; }
+a { color: var(--accent-ink); text-decoration-color: var(--accent-line); text-underline-offset: 3px; }
+a:hover { text-decoration-color: var(--accent); }
+code {
+  font-family: var(--mono);
+  font-size: 0.84em;
+  background: var(--code-bg);
+  border-radius: 4px;
+  padding: 1px 5px;
+  overflow-wrap: anywhere;
+}
+h1, h2, h3 { line-height: 1.2; letter-spacing: -0.015em; font-weight: 700; }
+h1 { font-weight: 800; letter-spacing: -0.02em; }
+h2 { font-size: 1.45rem; margin: 0 0 0.75rem; }
+h3 { font-size: 1.05rem; margin: 1.5rem 0 0.5rem; }
+.fancy { font-family: var(--serif); font-style: italic; font-weight: 500; letter-spacing: -0.01em; }
+p { margin: 0.7rem 0; }
+section { padding: 2.6rem 0; border-top: 1px solid var(--line); }
+section.no-rule { border-top: none; }
+
+/* ---------- sticky band ----------
+   Hidden over the hero; slides in once the hero scrolls away and gives a
+   persistent way back to the top and the table of contents. */
+.siteband {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+  background: rgba(254, 253, 251, 0.92);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+  transform: translateY(-100%); visibility: hidden;
+  transition: transform 0.2s ease, visibility 0.2s;
+}
+.siteband.on { transform: none; visibility: visible; }
+.bandrow { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 48px; }
+.bandtitle {
+  font-weight: 700; font-size: 0.95rem; letter-spacing: -0.01em;
+  color: var(--ink); text-decoration: none;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.bandtoc {
+  font-weight: 600; font-size: 0.85rem; white-space: nowrap;
+  color: var(--accent-ink); text-decoration: none;
+  background: var(--accent-bg); border: 1px solid var(--accent-line);
+  border-radius: 999px; padding: 4px 14px;
+}
+.bandtoc:hover { border-color: var(--accent); }
+
+/* ---------- header ---------- */
+header.hero { padding: 3.2rem 0 2.4rem; }
+.hero h1 { font-size: clamp(1.7rem, 5vw, 2.5rem); margin: 0 0 1rem; }
+.hero .thesis { font-size: clamp(1.02rem, 2.4vw, 1.18rem); color: var(--ink); max-width: 62ch; margin: 0 0 0.9rem; }
+.hero .howto { color: var(--muted); max-width: 62ch; margin: 0; }
+.toc { margin: 2rem 0 0; max-width: 62ch; }
+.toclabel {
+  display: block; margin-bottom: 0.35rem;
+  font-family: var(--serif); font-style: italic; font-weight: 500;
+  font-size: 0.95rem; color: var(--accent);
+}
+.toc ul { list-style: none; margin: 0; padding: 0; columns: 2; column-gap: 44px; }
+@media (max-width: 640px) { .toc ul { columns: 1; } }
+.toc li { break-inside: avoid; border-bottom: 1px solid var(--line-soft); }
+.toc a {
+  display: flex; align-items: baseline; gap: 9px;
+  padding: 7px 1px; font-size: 0.93rem; font-weight: 500;
+  color: var(--ink); text-decoration: none;
+}
+.toc a:hover { color: var(--accent-ink); }
+.toc .tnum { font-family: var(--mono); font-size: 0.72rem; color: var(--accent); }
+
+/* ---------- dialect legend ---------- */
+.dgrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 1.2rem; }
+@media (max-width: 700px) { .dgrid { grid-template-columns: 1fr; } }
+.dcard {
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 14px 16px;
+}
+.dcard .dtop { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
+.dtag {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--accent-ink);
+  background: var(--accent-bg);
+  border: 1px solid var(--accent-line);
+  border-radius: 4px;
+  padding: 1px 6px;
+  white-space: nowrap;
+}
+.dcard .dname { font-weight: 600; }
+.dcard p { margin: 0.25rem 0 0; font-size: 0.92rem; color: var(--muted); }
+.dcard .dspec { font-size: 0.82rem; color: var(--faint); margin-top: 0.5rem; }
+
+/* ---------- spine matrix ---------- */
+.spine { margin-top: 1.4rem; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); overflow: hidden; }
+.shead { display: none; }
+.crow { border-top: 1px solid var(--line-soft); cursor: pointer; }
+.crow:first-of-type { border-top: none; }
+.chead {
+  display: flex; align-items: baseline; gap: 10px;
+  width: 100%; text-align: left;
+  background: none; border: none; cursor: pointer;
+  font: inherit; color: inherit;
+  padding: 13px 16px;
+}
+.chead .cnum { font-family: var(--mono); font-size: 0.78rem; color: var(--faint); }
+.chead .cname { font-weight: 600; font-size: 0.98rem; flex: 1; }
+.chead .caret { color: var(--faint); font-size: 0.8rem; transition: transform 0.15s ease; }
+.chead .hint { font-family: var(--mono); font-size: 0.68rem; color: var(--faint); text-transform: uppercase; letter-spacing: 0.05em; margin-right: 4px; }
+.chead .hint::after { content: "expand"; }
+.crow.open .chead .hint::after { content: "collapse"; }
+.crow.open .chead .caret { transform: rotate(90deg); }
+.cells { display: none; padding: 0 16px 4px; }
+.crow.open .cells { display: block; }
+.cell { padding: 7px 0; border-top: 1px dashed var(--line-soft); font-size: 0.9rem; }
+.cell .dtag { margin-right: 7px; }
+.cnote { display: none; padding: 10px 16px 16px; }
+.crow.open .cnote { display: block; }
+.cnote p { margin: 0; font-size: 0.93rem; color: var(--muted); max-width: none; }
+.mlink {
+  font-family: var(--mono); font-size: 0.78rem; white-space: nowrap;
+  color: var(--accent-ink); background: var(--accent-bg);
+  border: 1px solid var(--accent-line); border-radius: 4px;
+  padding: 1px 7px; text-decoration: none; margin-left: 6px;
+}
+@media (min-width: 860px) {
+  .shead {
+    display: grid;
+    grid-template-columns: minmax(230px, 1.25fr) repeat(4, 1fr);
+    gap: 0 14px;
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--mono); font-size: 0.72rem; color: var(--faint);
+    text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .crow {
+    display: grid;
+    grid-template-columns: minmax(230px, 1.25fr) repeat(4, 1fr);
+    gap: 0 14px;
+    padding: 0 16px;
+  }
+  .chead { padding: 13px 0; display: block; grid-column: 1; }
+  .chead .cnum { display: block; margin-bottom: 2px; }
+  .chead .cname { font-size: 0.95rem; }
+  .chead .caret { font-size: 0.7rem; margin-left: 6px; }
+  .cells, .crow.open .cells { display: contents; }
+  .cell { border-top: none; padding: 13px 0; align-self: start; }
+  .cell .dtag { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); border: 0; }
+  .cnote { grid-column: 1 / -1; padding: 0 0 14px; }
+  .crow:hover { background: var(--line-soft); }
+  .crow.open { background: var(--accent-bg); }
+  .crow.open code { background: var(--surface); }
+}
+
+/* ---------- modules ---------- */
+.module h2 .mnum { font-family: var(--mono); font-size: 0.95rem; color: var(--accent); margin-right: 10px; }
+.judgment {
+  border-left: 3px solid var(--accent);
+  background: var(--accent-bg);
+  border-radius: 0 8px 8px 0;
+  padding: 12px 16px;
+  margin: 1rem 0 1.4rem;
+  max-width: 72ch;
+}
+.judgment p { margin: 0; font-weight: 500; }
+.ops {
+  border: 1px solid var(--warn-line);
+  background: var(--warn-bg);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 1.3rem 0 0.4rem;
+  max-width: 72ch;
+  font-size: 0.95rem;
+}
+.ops .opslabel { font-family: var(--mono); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--warn-ink); display: block; margin-bottom: 4px; }
+.src { font-size: 0.82rem; color: var(--faint); margin-top: 1rem; }
+.flagnote { font-size: 0.88rem; color: var(--muted); border: 1px dashed var(--line); border-radius: 8px; padding: 10px 14px; margin: 1rem 0; max-width: 72ch; }
+
+/* evidence grids (families x dialects) */
+.egrid { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); overflow: hidden; margin: 1.2rem 0; }
+.erow { border-top: 1px solid var(--line-soft); padding: 10px 16px; }
+.erow:first-child { border-top: none; }
+.erow .elabel { font-weight: 600; font-size: 0.9rem; display: block; margin-bottom: 4px; }
+.erow .esub { font-weight: 400; color: var(--faint); font-size: 0.82rem; }
+.ecell { padding: 5px 0; font-size: 0.89rem; border-top: 1px dashed var(--line-soft); }
+.ecell:first-of-type { border-top: none; }
+.ecell .dtag { margin-right: 7px; }
+@media (min-width: 860px) {
+  .egrid.ehead-on .ehead {
+    display: grid; grid-template-columns: minmax(170px, 0.9fr) repeat(4, 1fr); gap: 0 14px;
+    padding: 9px 16px; border-bottom: 1px solid var(--line);
+    font-family: var(--mono); font-size: 0.72rem; color: var(--faint); text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .erow { display: grid; grid-template-columns: minmax(170px, 0.9fr) repeat(4, 1fr); gap: 0 14px; align-items: start; }
+  .erow .elabel { margin-bottom: 0; padding: 3px 0; }
+  .ecell { border-top: none; padding: 3px 0; }
+  .ecell .dtag { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); border: 0; }
+}
+.ehead { display: none; }
+
+/* enum chips (M2) */
+.enumrow { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px; padding: 10px 16px; border-top: 1px solid var(--line-soft); }
+.enumrow:first-child { border-top: none; }
+.enumrow .efield { flex-basis: 100%; font-size: 0.9rem; }
+@media (min-width: 860px) { .enumrow .efield { flex-basis: 380px; } }
+.chip {
+  font-family: var(--mono); font-size: 0.78rem;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: var(--surface);
+  padding: 1px 9px; color: var(--muted); white-space: nowrap;
+}
+.chip.weak { border-color: var(--warn-line); color: var(--warn-ink); background: var(--warn-bg); }
+.chip.r1::before, .chip.r2::before, .chip.r3::before, .chip.r4::before {
+  font-size: 0.68rem; color: var(--faint); margin-right: 5px;
+}
+.chip.r1::before { content: "1"; }
+.chip.r2::before { content: "2"; }
+.chip.r3::before { content: "3"; }
+.chip.r4::before { content: "4"; }
+.chip.weak::before { color: var(--warn-ink); }
+
+/* numbered steps (M4) */
+.steps { margin: 1.1rem 0; padding-left: 1.5rem; max-width: 72ch; }
+.steps li { margin: 7px 0; }
+
+/* cast list (who's who) */
+.castlist { list-style: none; padding: 0; margin: 1.2rem 0; max-width: 72ch; }
+.castlist li { padding: 8px 0; border-top: 1px solid var(--line-soft); }
+.castlist li:first-child { border-top: none; }
+
+/* trust ladder */
+.ladder { list-style: none; counter-reset: rung; padding: 0; margin: 1.2rem 0; max-width: 72ch; }
+.ladder li {
+  counter-increment: rung;
+  border: 1px solid var(--line); border-radius: 8px; background: var(--surface);
+  padding: 10px 14px 10px 46px; margin: 6px 0; position: relative; font-size: 0.94rem;
+}
+.ladder li::before {
+  content: counter(rung);
+  position: absolute; left: 14px; top: 11px;
+  font-family: var(--mono); font-size: 0.8rem; color: var(--accent-ink);
+  border: 1px solid var(--accent-line); background: var(--accent-bg);
+  border-radius: 5px; width: 20px; height: 20px; line-height: 19px; text-align: center;
+}
+.ladder li.weakest::before { color: var(--warn-ink); border-color: var(--warn-line); background: var(--warn-bg); }
+
+/* auth cards (M3) */
+.authgrid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 1.2rem 0; }
+@media (max-width: 700px) { .authgrid { grid-template-columns: 1fr; } }
+.authcard { border: 1px solid var(--line); border-radius: 12px; background: var(--surface); padding: 13px 15px; font-size: 0.92rem; }
+.authcard .where { font-weight: 600; display: block; margin: 4px 0 2px; }
+.authcard p { margin: 0.2rem 0 0; color: var(--muted); font-size: 0.9rem; }
+
+/* ---------- payload viewer ---------- */
+.scenepick { display: flex; gap: 8px; flex-wrap: wrap; margin: 1.2rem 0 0.4rem; }
+.scenepick button {
+  font: inherit; font-size: 0.9rem; font-weight: 500;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: var(--surface); color: var(--muted);
+  padding: 7px 16px; cursor: pointer;
+}
+.scenepick button:active { transform: scale(0.98); }
+.scenepick button.active {
+  border-color: var(--accent); color: var(--accent-contrast); background: var(--accent);
+}
+.scene { display: none; }
+.scene.active { display: block; }
+.story { color: var(--muted); font-size: 0.97rem; max-width: 72ch; margin: 0.9rem 0 1.1rem; }
+.panes { display: grid; grid-template-columns: 1fr; gap: 12px; }
+@media (min-width: 980px) { .panes { grid-template-columns: 1fr 1fr 1fr; } }
+.pane { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--pre-bg); }
+.pane .phead {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 8px 14px; border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.pane .phead .pname { font-weight: 600; font-size: 0.88rem; color: var(--pre-ink); }
+.pane .phead .pfmt { font-family: var(--mono); font-size: 0.7rem; color: var(--pre-faint); }
+.pane pre {
+  margin: 0; padding: 12px 14px;
+  font-family: var(--mono); font-size: 0.74rem; line-height: 1.65;
+  color: var(--pre-ink); overflow-x: auto;
+}
+.pane .cmt { color: var(--pre-faint); }
+.pane .hl { background: var(--pre-hl); box-shadow: -3px 0 0 var(--pre-hl-line); border-radius: 2px; padding: 1px 2px; }
+.pane .pnote { padding: 12px 16px 16px; color: var(--pre-ink); font-size: 0.86rem; line-height: 1.6; }
+.pane .pnote p { margin: 0.5rem 0; }
+.callouts { list-style: none; padding: 0; margin: 1.1rem 0 0; max-width: 78ch; }
+.callouts li {
+  border-left: 3px solid var(--warn-line);
+  padding: 6px 0 6px 14px; margin: 8px 0; font-size: 0.92rem; color: var(--muted);
+}
+.illustr { font-size: 0.82rem; color: var(--faint); margin-top: 0.9rem; }
+
+/* ---------- capability table ---------- */
+table.cap { width: 100%; border-collapse: collapse; margin: 1.2rem 0 0.4rem; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; font-size: 0.9rem; }
+.cap th, .cap td { padding: 9px 10px; border-top: 1px solid var(--line-soft); text-align: center; }
+.cap thead th { font-family: var(--mono); font-size: 0.72rem; color: var(--faint); text-transform: uppercase; letter-spacing: 0.06em; border-top: none; }
+.cap thead th:first-child { text-align: left; }
+.cap tbody th { text-align: left; font-size: 0.88rem; font-weight: 400; }
+.cap .yes { color: var(--ok); font-weight: 600; }
+.cap .part { color: var(--warn-ink); font-weight: 600; }
+.cap .no { color: var(--muted); }
+.cap .capnote { display: block; font-family: var(--mono); font-size: 0.68rem; color: var(--muted); margin-top: 2px; font-weight: 400; }
+@media (max-width: 700px) { .cap .capnote { display: none; } .cap th, .cap td { padding: 8px 6px; } }
+.legendline { font-size: 0.82rem; color: var(--faint); }
+
+/* ---------- aside ---------- */
+.aside {
+  border: 1px solid var(--line); border-radius: 12px; background: var(--surface);
+  padding: 18px 20px; max-width: 78ch;
+}
+.aside h2 { font-size: 1.1rem; }
+.aside p { color: var(--muted); font-size: 0.95rem; }
+
+/* ---------- footer ---------- */
+footer { border-top: 1px solid var(--line); padding: 2.4rem 0 3.5rem; }
+footer h2 { font-size: 1.1rem; }
+.srclist { list-style: none; padding: 0; margin: 1rem 0; }
+.srclist li { padding: 7px 0; border-top: 1px solid var(--line-soft); font-size: 0.88rem; }
+.srclist li:first-child { border-top: none; }
+.srclist .sname { font-weight: 600; }
+.srclist .smeta { color: var(--muted); font-size: 0.82rem; }
+.drift { color: var(--muted); font-size: 0.9rem; max-width: 72ch; }
+
+/* ---------- provenance collapsibles ----------
+   Each details.why states one load-bearing assumption, its reasoning,
+   and the public evidence behind it. Part of the artifact, collapsed
+   by default. */
+details.why { border: 1px dashed var(--line); border-radius: 8px; margin: 1.2rem 0 0.4rem; max-width: 72ch; }
+details.why summary {
+  cursor: pointer; padding: 9px 14px; list-style: none;
+  font-family: var(--mono); font-size: 0.78rem; color: var(--muted);
+}
+details.why summary::-webkit-details-marker { display: none; }
+details.why summary::before { content: "\25B8\00a0\00a0"; color: var(--accent); }
+details.why[open] summary::before { content: "\25BE\00a0\00a0"; }
+details.why .whybody { padding: 0 14px 12px; font-size: 0.92rem; color: var(--muted); }
+details.why .whybody p { margin: 0.4rem 0 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+  html { scroll-behavior: auto; }
+}
+</style>
+</head>
+<body id="top">
+
+<div class="siteband" id="siteband">
+  <div class="wrap bandrow">
+    <a class="bandtitle" href="#top">An FDE&rsquo;s <em class="fancy">Field Guide</em> to EVV Data</a>
+    <a class="bandtoc" href="#toc">Contents</a>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap">
+    <h1>An FDE&rsquo;s <em class="fancy">Field Guide</em> to EVV Data</h1>
+    <p class="thesis" data-claim="H1">Federal law requires electronic visit verification (EVV) for Medicaid home care: each visit must prove six facts. The law does not define a file format or field names. Each aggregator and state publishes its own layout, 30 to 141 fields wide, and the differences between those layouts matter operationally.</p>
+    <p class="howto">The layouts all record the same six facts under different field names, which is why this guide calls them dialects. It is organized around the six federal facts, showing how four published dialects express each one. Each numbered section covers one decision an integrations engineer has to make, with the field evidence under it.</p>
+
+    <nav class="toc" id="toc" aria-label="Contents">
+      <span class="toclabel">Contents</span>
+      <ul>
+        <li><a href="#cast">Who&rsquo;s who</a></li>
+        <li><a href="#dialects">The four dialects</a></li>
+        <li><a href="#spine">The six concepts</a></li>
+        <li><a href="#m1"><span class="tnum">01</span> Timestamps</a></li>
+        <li><a href="#m2"><span class="tnum">02</span> Verification</a></li>
+        <li><a href="#m3"><span class="tnum">03</span> Authorization</a></li>
+        <li><a href="#m4"><span class="tnum">04</span> Identity</a></li>
+        <li><a href="#m5"><span class="tnum">05</span> Reason codes</a></li>
+        <li><a href="#payloads">One visit, three spellings</a></li>
+        <li><a href="#cap">What each dialect can&rsquo;t say</a></li>
+        <li><a href="#agency">The agency-side blind spot</a></li>
+        <li><a href="#sources">Sources</a></li>
+      </ul>
+    </nav>
+
+    <details class="why">
+      <summary>Why the differences, not the fields, are the subject</summary>
+      <div class="whybody">
+        <p>This guide assumes the differences between dialects matter operationally, and are not trivia a field dictionary would cover. The strongest evidence comes from people working on this data. <a href="https://engineering.zingage.com/how-we-built-a-data-platform-for-ai-agents/">Zingage&rsquo;s engineering team</a>, which runs coordination agents on exactly this data, describes rebuilding its data layer after failures like voice AI calling caregivers about visits that were already closed. Their diagnosis: none of these were application bugs, only &ldquo;contradictions born from stale or conflicting data.&rdquo; <a href="https://engineering.zingage.com/keep-grandma-out-of-the-hospital-the-zingage-way/">Another of their posts</a> says it directly: &ldquo;A race condition isn&rsquo;t an edge case - it&rsquo;s a missed visit.&rdquo;</p>
+        <p>State regulators treat the differences the same way. Pennsylvania requires 85% of visits to verify automatically, with no manual edits, so it measures the gap between automatic and edited verification. Texas regulates edits with a 95-day window and mandatory reason codes. And an unverified visit cannot be billed to Medicaid, so a mistake in reading verification data costs the agency the payment.</p>
+        <p>The dialects themselves make the same point: every one carries three separate timestamp pairs, and the dialects that model missed visits at all give them their own code tables, separate from the edit codes. Vendors would not carry all of that if the distinctions did not matter.</p>
+      </div>
+    </details>
+  </div>
+</header>
+
+<section class="no-rule" id="cast">
+  <div class="wrap">
+    <h2>Who&rsquo;s who in a home-care visit</h2>
+    <ul class="castlist">
+      <li data-claim="CAST.1"><strong>Home care.</strong> Help with the tasks of daily living, bathing, dressing, meals, delivered in the client&rsquo;s own home.</li>
+      <li data-claim="CAST.1"><strong>The client.</strong> The person receiving care. The specs below also call them the member or the individual.</li>
+      <li data-claim="CAST.1"><strong>The caregiver.</strong> The person who shows up and does the visit. Employed by an agency.</li>
+      <li data-claim="CAST.1"><strong>The agency.</strong> A business that employs caregivers, schedules them into clients&rsquo; homes, and bills for the hours delivered.</li>
+      <li data-claim="CAST.1"><strong>Medicaid.</strong> Government health insurance, run by each state under federal rules; in this guide the bill always goes to Medicaid. The money moves in one direction: Medicaid pays the agency for each visit, and the agency pays the caregiver.</li>
+      <li data-claim="CAST.2"><strong>The EMR.</strong> The agency&rsquo;s scheduling system (EMR is short for electronic medical record). Knows who should be in which home at what hour.</li>
+      <li data-claim="CAST.2"><strong>The EVV system.</strong> Records what actually happened: the caregiver&rsquo;s clock-in and clock-out, with the evidence attached. Every agency runs one of two kinds: the capture system its state provides, or its own, either built into the EMR or a separate product.</li>
+      <li data-claim="CAST.2"><strong>The aggregator.</strong> Run by the state. Collects visit records from every agency and checks claims against them before Medicaid pays.</li>
+      <li data-claim="CAST.4"><strong>The vendors.</strong> The software companies in this business: Sandata, HHAeXchange, and Netsmart all appear below. A vendor is a company, not a role in the pipeline: the same company can sell software to agencies in one state and run the state&rsquo;s aggregator in another. Three of the four dialects below are the intake layouts of vendors hired as state aggregators; the fourth, Texas, is published by the state itself.</li>
+    </ul>
+    <p class="prose" data-claim="CAST.3">This page is about the last hand-off: getting the visit into the state&rsquo;s aggregator. An agency on the state-provided system never sees this hand-off; the state&rsquo;s system feeds the aggregator internally. An agency running its own EVV system, the &ldquo;alternate EVV&rdquo; case these specs are written for, must submit every visit in the aggregator&rsquo;s published layout. Four aggregators, four layouts: those are the dialects below.</p>
+  </div>
+</section>
+
+<section id="dialects">
+  <div class="wrap">
+    <h2>The four dialects</h2>
+    <p class="prose" data-claim="D0">How a visit turns into one of these records: during the visit, the caregiver clocks in and out through whatever their agency runs, a mobile app that records GPS, a phone call from the client&rsquo;s home number, or a fixed device in the home. Those clock events land in the agency&rsquo;s EVV system, which then submits the finished visit record to the state&rsquo;s aggregator. Each specification below is an aggregator&rsquo;s published intake layout: the format a third-party (&ldquo;alternate EVV&rdquo;) system must write when it submits visits. Typing a visit in after the fact is also possible, but it is the weakest form of verification and the one states cap. <a class="mlink" href="#m2">02 verification</a></p>
+    <p class="prose">Which layout an agency writes is the state&rsquo;s decision, not the agency&rsquo;s. Each state Medicaid program designates an aggregator: Sandata in roughly 20 states, HHAeXchange for New York and others, Netsmart for Florida and Louisiana, Texas running its own through TMHP. So an agency operating in two states writes two dialects, and one state can route different programs or payers to different aggregators: Pennsylvania, for example, sends some programs through HHAeXchange and others through Netsmart. One vendor can also hold different roles in different states: in Texas, HHAeXchange is the state-provided system caregivers clock in through, while TMHP runs the aggregator every visit record must reach.</p>
+    <p class="prose">Every claim in this guide is drawn from a published specification you can download today. Sources and versions are at the <a href="#sources">bottom</a>. The four tags below mark every field name that follows.</p>
+    <div class="dgrid">
+      <div class="dcard" data-claim="D1">
+        <div class="dtop"><span class="dtag">HHAX</span><span class="dname">HHAeXchange EVV API</span></div>
+        <p>REST and JSON, OAuth2. One schema everywhere it operates, but the code values it accepts (reason codes and the like) differ state by state. Aggregates EVV for New York, Illinois, New Jersey, and more, a network HHAeXchange puts at 32,000+ provider agencies. In Texas it plays the other role, the state-provided capture system feeding the TMHP aggregator. It also owns Sandata, though the two data contracts remain separate.</p>
+        <p class="dspec">Spec: EVV API Technical Specifications (Illinois), API v1, rev. through 10/2024</p>
+      </div>
+      <div class="dcard" data-claim="D2">
+        <div class="dtop"><span class="dtag">SAND</span><span class="dname">Sandata altEVV</span></div>
+        <p>REST and JSON (XML accepted), HTTP Basic auth. The generic &ldquo;Open EVV&rdquo; contract used by roughly 20 states, each layering its own code values through addenda.</p>
+        <p class="dspec">Spec: altEVV v7.10 FINAL, 08/2020</p>
+      </div>
+      <div class="dcard" data-claim="D3">
+        <div class="dtop"><span class="dtag">TX</span><span class="dname">Texas TMHP Appendix C</span></div>
+        <p>Positional flat file, 141 fields. The richest and most self-contained published state layout; where other states point at a vendor contract, Texas publishes the whole thing.</p>
+        <p class="dspec">Spec: EVV Visit Transaction Layout v3.0, effective 08/2023</p>
+      </div>
+      <div class="dcard" data-claim="D4">
+        <div class="dtop"><span class="dtag">NS</span><span class="dname">Netsmart / Tellus Rendered Services</span></div>
+        <p>Unlike the others, not an API at all: an SFTP drop of pipe-delimited files, PGP-encrypted, about 1,200 visits per file. You upload a batch and learn what failed when the <code>_ACCEPTED</code> and <code>_REJECTED</code> response files come back, not in an immediate API response. Aggregates Florida, Louisiana, and state variants.</p>
+        <p class="dspec">Spec: Alternate EVV Vendor Implementation Guide, 06/2023</p>
+      </div>
+    </div>
+
+    <details class="why">
+      <summary>Why these four dialects</summary>
+      <div class="whybody">
+        <p>Selection rule: aggregator dialects with published, field-level specifications, chosen so that together they span the kinds of layout an integrations engineer meets in practice: a REST API with JSON records (Sandata, HHAeXchange), a positional state flat file (Texas), and a batch file drop over SFTP (Netsmart). Sandata altEVV is the generic contract used by roughly 20 states. HHAeXchange runs the largest aggregation network. Texas publishes the richest self-contained state layout in the country.</p>
+        <p>HHAeXchange also owns Sandata (it bought the company), and the two still count as separate dialects because each state wrote a specific format into its own rules. A Sandata state tells providers: submit visits to our aggregator in the altEVV layout, using our published list of code values. A state that designated HHAeXchange instead tells providers to submit through the HHAeXchange API. Those state rules did not change when one vendor bought the other, so both formats remain in force. That is the guide&rsquo;s point in miniature: the schema you write is set by the state program you bill, not by who owns the software.</p>
+        <p>Agency-side EMRs are deliberately not one of the four. They record the same visit with almost none of these fields, which is the point of the aside near the bottom of this page.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section id="spine">
+  <div class="wrap">
+    <h2>The six federal concepts</h2>
+    <p class="prose" data-claim="SP0">Section 12006 of the 21st Century Cures Act requires an EVV system to verify six things: the type of service, the individual receiving it, the date, the location, the individual providing it, and the time it begins and ends. CMS calls the list a floor and left the layout to states and vendors. Open a concept to see its four spellings and what the differences mean.</p>
+
+    <div class="spine">
+      <div class="shead" aria-hidden="true">
+        <span>Concept</span><span>HHAX</span><span>SAND</span><span>TX</span><span>NS</span>
+      </div>
+
+      <div class="crow open" id="c1">
+        <button class="chead" type="button" aria-expanded="true" aria-controls="c1-cells c1-note">
+          <span class="cnum">1</span>
+          <span class="cname">Type of service performed</span>
+          <span class="hint" aria-hidden="true"></span><span class="caret">&#9656;</span>
+        </button>
+        <div class="cells" id="c1-cells">
+          <div class="cell"><span class="dtag">HHAX</span><code>procedureCode</code> + <code>procedureModifierCode[]</code></div>
+          <div class="cell"><span class="dtag">SAND</span><code>ProcedureCode</code> + <code>Modifier1..4</code></div>
+          <div class="cell"><span class="dtag">TX</span><code>EVV_HCPCS_CODE</code> + <code>EVV_MODIFIER</code>, inside <code>VISIT_SVCGRP</code> + <code>EVV_SVCCODE</code></div>
+          <div class="cell"><span class="dtag">NS</span><code>ServiceCode</code> + <code>ServiceCodeMod1..4</code></div>
+        </div>
+        <div class="cnote" id="c1-note" data-claim="S1"><p>The core is universal: one HCPCS procedure code (HCPCS is the standard code set Medicaid bills with) plus up to four modifiers. Texas alone wraps it in a second, state-specific coding tier (service group plus service code), so one delivered service carries three code systems at once. Whether the visit can be billed depends on which of those codes the payer authorized. <a class="mlink" href="#m3">03 authorization</a></p></div>
+      </div>
+
+      <div class="crow" id="c2">
+        <button class="chead" type="button" aria-expanded="false" aria-controls="c2-cells c2-note">
+          <span class="cnum">2</span>
+          <span class="cname">Individual receiving the service</span>
+          <span class="hint" aria-hidden="true"></span><span class="caret">&#9656;</span>
+        </button>
+        <div class="cells" id="c2-cells">
+          <div class="cell"><span class="dtag">HHAX</span><code>Member.identifier</code> (qualifier <code>MedicaidID</code>), <code>admissionId</code> if dual-enrolled</div>
+          <div class="cell"><span class="dtag">SAND</span><code>ClientMedicaidID</code>, plus <code>ClientPayerID</code></div>
+          <div class="cell"><span class="dtag">TX</span><code>INDVMBR_MEDICAIDID</code>, plus <code>INDVMBR_MEMBEREVVID</code></div>
+          <div class="cell"><span class="dtag">NS</span><code>RecipientMedicaidId</code>, plus <code>RecipientMemberId</code></div>
+        </div>
+        <div class="cnote" id="c2-note" data-claim="S2"><p>Every dialect carries the Medicaid ID, and every dialect also carries at least one payer- or platform-assigned second identity. The person exists at least twice per system before you ever cross systems. <a class="mlink" href="#m4">04 identity</a></p></div>
+      </div>
+
+      <div class="crow" id="c3">
+        <button class="chead" type="button" aria-expanded="false" aria-controls="c3-cells c3-note">
+          <span class="cnum">3</span>
+          <span class="cname">Date of service</span>
+          <span class="hint" aria-hidden="true"></span><span class="caret">&#9656;</span>
+        </button>
+        <div class="cells" id="c3-cells">
+          <div class="cell"><span class="dtag">HHAX</span>no date field; derived from <code>visitStartDateTime</code> (UTC)</div>
+          <div class="cell"><span class="dtag">SAND</span>no date field; derived from schedule and call datetimes (UTC)</div>
+          <div class="cell"><span class="dtag">TX</span><code>VISIT_VISITDATE</code>, a first-class field</div>
+          <div class="cell"><span class="dtag">NS</span>no date field; derived from <code>ActualStartDateTime</code> (UTC)</div>
+        </div>
+        <div class="cnote" id="c3-note" data-claim="S3"><p>Only Texas makes the service date its own field. The other three specs simply do not define one: the date is something you compute from a UTC timestamp, so &ldquo;what day did this visit happen&rdquo; depends on which timezone you convert to, and an overnight visit can land on either side of midnight. <a class="mlink" href="#m4">04 identity</a></p></div>
+      </div>
+
+      <div class="crow" id="c4">
+        <button class="chead" type="button" aria-expanded="false" aria-controls="c4-cells c4-note">
+          <span class="cnum">4</span>
+          <span class="cname">Location of service delivery</span>
+          <span class="hint" aria-hidden="true"></span><span class="caret">&#9656;</span>
+        </button>
+        <div class="cells" id="c4-cells">
+          <div class="cell"><span class="dtag">HHAX</span><code>callLatitude</code> / <code>callLongitude</code> per clock event</div>
+          <div class="cell"><span class="dtag">SAND</span><code>CallLatitude</code> / <code>CallLongitude</code> per call, plus a client-address geocode</div>
+          <div class="cell"><span class="dtag">TX</span><code>EVV_VISIT_LATITUDE_IN/_OUT</code>, plus <code>EVV_LAT_LONG_MATCH_IN/_OUT</code> and <code>EVV_VISITLOCATION</code></div>
+          <div class="cell"><span class="dtag">NS</span><code>ActualStartLatitude/Longitude</code>, plus end-of-visit address fields</div>
+        </div>
+        <div class="cnote" id="c4-note" data-claim="S4"><p>Everyone records where the device was. Only Texas also records the verdict: an explicit match flag against the home geocode. A location type (member home versus community) appears in Texas and in state variants of the others, a reminder that community visits are legitimate. But in the other three base dialects, &ldquo;was the caregiver in the right place&rdquo; is a computation you own, not a field you read. <a class="mlink" href="#m2">02 verification</a></p></div>
+      </div>
+
+      <div class="crow" id="c5">
+        <button class="chead" type="button" aria-expanded="false" aria-controls="c5-cells c5-note">
+          <span class="cnum">5</span>
+          <span class="cname">Individual providing the service</span>
+          <span class="hint" aria-hidden="true"></span><span class="caret">&#9656;</span>
+        </button>
+        <div class="cells" id="c5-cells">
+          <div class="cell"><span class="dtag">HHAX</span><code>externalID</code> (qualifier <code>ExternalID</code>)</div>
+          <div class="cell"><span class="dtag">SAND</span><code>EmployeeIdentifier</code> + <code>EmployeeQualifier</code> (SSN / RegID / CustomID)</div>
+          <div class="cell"><span class="dtag">TX</span><code>EMPLOYEE_EMPLOYEEID</code> + <code>EMPLOYEE_EVVID</code></div>
+          <div class="cell"><span class="dtag">NS</span><code>CaregiverEvvId</code>, plus <code>CaregiverLicenseNumber</code></div>
+        </div>
+        <div class="cnote" id="c5-note" data-claim="S5"><p>Four different answers to what identifies a worker: an agency-assigned code, a qualifier scheme that may mean SSN, a state EVV ID, a license number. Caregiver identity across systems is a mapping table you maintain, not a key you join on. <a class="mlink" href="#m4">04 identity</a></p></div>
+      </div>
+
+      <div class="crow" id="c6">
+        <button class="chead" type="button" aria-expanded="false" aria-controls="c6-cells c6-note">
+          <span class="cnum">6</span>
+          <span class="cname">Time the service begins and ends</span>
+          <span class="hint" aria-hidden="true"></span><span class="caret">&#9656;</span>
+        </button>
+        <div class="cells" id="c6-cells">
+          <div class="cell"><span class="dtag">HHAX</span><code>Evv.clockIn/clockOut.callDateTime</code>; also <code>visitStartDateTime/EndDateTime</code></div>
+          <div class="cell"><span class="dtag">SAND</span><code>Calls[].CallDateTime</code>; also <code>AdjInDateTime/AdjOutDateTime</code></div>
+          <div class="cell"><span class="dtag">TX</span><code>EVV_CALLINTIME/OUT</code>; also <code>EVV_BILL_TIME_IN/_OUT</code></div>
+          <div class="cell"><span class="dtag">NS</span><code>ActualStartDateTime/End</code>; also <code>InvoiceStartDateTime/End</code></div>
+        </div>
+        <div class="cnote" id="c6-note" data-claim="S6"><p>&ldquo;Begins and ends&rdquo; is the one concept every dialect answers three times: scheduled, actual, and adjusted. The three answers disagree in informative ways, covered in module 01. <a class="mlink" href="#m1">01 timestamps</a></p></div>
+      </div>
+    </div>
+
+    <details class="why">
+      <summary>Why the guide is organized by the six federal concepts</summary>
+      <div class="whybody">
+        <p>The six elements are the only constant across every dialect, because they are the statutory floor each layout must implement. Organizing by them lets a reader keep one mental model and learn four spellings of it, instead of learning four schemas. The rejected alternative was organizing by vendor.</p>
+        <p>The cost is uneven fit. Verification method maps cleanly onto all four dialects. Date of service is a real field only in Texas (<code>VISIT_VISITDATE</code>); the other three give you only timestamps, so the service day has to be computed, and an overnight visit can land on either side of midnight (concept 3). The awkward rows stay, because the awkwardness is itself information about the dialect.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section class="module" id="m1">
+  <div class="wrap">
+    <h2><span class="mnum">01</span>The three timestamp families</h2>
+    <div class="judgment" data-claim="M1.J"><p>A visit record answers &ldquo;when did this happen&rdquo; three ways, and each answer has a different job. Detecting a missed visit means comparing scheduled with actual. Billing uses adjusted. And a difference between actual and adjusted means a person edited the record, which states cap.</p></div>
+
+    <div class="egrid ehead-on" data-claim="M1.T">
+      <div class="ehead" aria-hidden="true"><span>Family</span><span>HHAX</span><span>SAND</span><span>TX</span><span>NS</span></div>
+      <div class="erow">
+        <span class="elabel">Scheduled <span class="esub">what was promised</span></span>
+        <div class="ecell"><span class="dtag">HHAX</span><code>scheduleStartTime</code> / <code>scheduleEndTime</code></div>
+        <div class="ecell"><span class="dtag">SAND</span><code>ScheduleStartTime</code> / <code>ScheduleEndTime</code></div>
+        <div class="ecell"><span class="dtag">TX</span><code>VISIT_VISITDATE</code> + <code>VISIT_VISITTIMEIN/OUT</code></div>
+        <div class="ecell"><span class="dtag">NS</span><code>ScheduledStartDateTime</code> / <code>ScheduledEndDateTime</code></div>
+      </div>
+      <div class="erow">
+        <span class="elabel">Actual <span class="esub">what the device recorded</span></span>
+        <div class="ecell"><span class="dtag">HHAX</span><code>Evv.clockIn.callDateTime</code> / <code>Evv.clockOut.callDateTime</code></div>
+        <div class="ecell"><span class="dtag">SAND</span><code>Calls[].CallDateTime</code> with <code>CallAssignment</code> Time In / Time Out</div>
+        <div class="ecell"><span class="dtag">TX</span><code>EVV_CALLINTIME</code> / <code>EVV_CALLOUTTIME</code></div>
+        <div class="ecell"><span class="dtag">NS</span><code>ActualStartDateTime</code> / <code>ActualEndDateTime</code></div>
+      </div>
+      <div class="erow">
+        <span class="elabel">Adjusted <span class="esub">the times that go on the claim</span></span>
+        <div class="ecell"><span class="dtag">HHAX</span><code>visitStartDateTime</code> / <code>visitEndDateTime</code> (see note below)</div>
+        <div class="ecell"><span class="dtag">SAND</span><code>AdjInDateTime</code> / <code>AdjOutDateTime</code></div>
+        <div class="ecell"><span class="dtag">TX</span><code>EVV_BILL_TIME_IN</code> / <code>EVV_BILL_TIME_OUT</code>, <code>EVV_ROUNDED_ACTUALHOURS</code></div>
+        <div class="ecell"><span class="dtag">NS</span><code>InvoiceStartDateTime</code> / <code>InvoiceEndDateTime</code></div>
+      </div>
+    </div>
+
+    <p class="prose" data-claim="M1.UTC">Three of the four dialects store these in UTC with a separate timezone field; the Texas layout uses local Central Time instead. The three pairs are not copies of one fact. They record three facts: the schedule, the clock events, and the times the payer bills against. To be explicit about the money: a claim bills the payer for units of time, and those units are computed from the adjusted start and end. The dollars paid are a direct function of the span between those two timestamps, not the raw clock events. That is why a gap between actual and adjusted is worth money and attention, and why states watch it.</p>
+
+    <div class="flagnote" data-claim="M1.HX">HHAeXchange caveat: the API carries both the raw <code>Evv.clockIn/clockOut.callDateTime</code> values and a top-level <code>visitStartDateTime</code> / <code>visitEndDateTime</code>. The spec&rsquo;s field descriptions support reading the top-level two as the confirmed, billable times: if a top-level time does not match the EVV clock value, the visit &ldquo;will be considered manually edited,&rdquo; and a top-level time with no EVV call behind it is &ldquo;considered manually confirmed.&rdquo; Checked against the Illinois spec PDF on July 5, 2026.</div>
+
+    <p class="prose" data-claim="M1.CMP">The compliance stakes are explicit. Pennsylvania requires 85% of visits to verify automatically, with no manual edits. Texas permits edits for 95 calendar days after the visit, each with a mandatory reason code. Both states track how often actual and adjusted differ.</p>
+
+    <div class="ops" data-claim="M1.OPS"><span class="opslabel">Why this matters at 3 AM</span>The clock-in feed is the missed-visit detector. If the scheduled start passes with no clock-in, a grace window runs out and a coordinator starts calling for a replacement. For a one-hour morning medication visit, the whole visit can be missed before anyone reacts. A detector built on the wrong timestamp pair fires late or not at all.</div>
+
+    <p class="src">Fields: Sandata altEVV v7.10; HHAX EVV API (IL); TMHP Appendix C v3.0; Netsmart Implementation Guide. Compliance: PA DHS EVV FAQ; TX HHSC EVV Policy Handbook &sect;9000. Detection in practice: Zingage Engineering, &ldquo;The Timeline We Owed Our Coordinators.&rdquo;</p>
+
+    <details class="why">
+      <summary>Where the three-family mapping comes from</summary>
+      <div class="whybody">
+        <p>The scheduled/actual/adjusted reading comes from the specs&rsquo; own naming and the states&rsquo; rules. Netsmart names its third pair <code>Invoice*</code> and Texas names it <code>BILL_TIME</code>, so the billing link is written into the field names. Pennsylvania and Texas regulate the gap between actual and adjusted directly, which is what makes that gap a compliance signal.</p>
+        <p>For the detection half: <a href="https://engineering.zingage.com/the-timeline-we-owed-our-coordinators/">Zingage&rsquo;s coordinator-timeline post</a> opens on a 3 AM no-show discovered exactly this way, and describes the missing clock-in as the emergency itself: &ldquo;a missing clock-in is a missing caregiver is a patient who may or may not have gotten their meds.&rdquo;</p>
+        <p>The one interpretive leap here, HHAeXchange&rsquo;s top-level times, was checked against the Illinois spec&rsquo;s field descriptions on July 5, 2026, and held up: the spec treats a mismatch between those times and the EVV clock values as a manual edit, and a top-level time with no EVV call behind it as manually confirmed.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section class="module" id="m2">
+  <div class="wrap">
+    <h2><span class="mnum">02</span>Verification method: the most divergent enum</h2>
+    <div class="judgment" data-claim="M2.J"><p>The four dialects use four incompatible vocabularies for the same question: how do we know the caregiver was really there? Do not just map the strings to each other. Rank the values by strength of evidence, because the weakest kind, manual entry, is the one regulators cap.</p></div>
+
+    <div class="egrid" data-claim="M2.T">
+      <div class="enumrow"><span class="efield"><span class="dtag">HHAX</span><code>callType</code></span><span class="chip r1">Mobile</span><span class="chip r2">Telephony</span><span class="chip r3">FOB</span></div>
+      <div class="enumrow"><span class="efield"><span class="dtag">SAND</span><code>CallType</code></span><span class="chip r1">Mobile</span><span class="chip r2">Telephony</span><span class="chip r3">FVV</span><span class="chip weak r4">Manual</span><span class="chip">Other</span></div>
+      <div class="enumrow"><span class="efield"><span class="dtag">TX</span><code>EVV_INPUTMETHOD_IN</code> / <code>_OUT</code></span><span class="chip r1">Mobile Method</span><span class="chip r2">Landline</span><span class="chip r3">Alternative Device</span><span class="chip weak r4">GUI</span></div>
+      <div class="enumrow"><span class="efield"><span class="dtag">NS</span><code>StartVerificationType</code> / <code>EndVerificationType</code></span><span class="chip r1">GPS</span><span class="chip r2">IVR</span><span class="chip weak r4">NON</span></div>
+    </div>
+
+    <p class="prose">Each row lists one dialect&rsquo;s values, strongest evidence first. The number on each value is its rung on the trust ladder below. Yellow marks the bottom rung, the kind states cap. Sandata&rsquo;s <code>Other</code> gets no number because it does not commit to a method; the fields that come with it decide what it is.</p>
+
+    <h3>The trust ladder</h3>
+    <ol class="ladder" data-claim="M2.L">
+      <li><strong>GPS inside the geofence</strong> (Mobile, Mobile Method, GPS). Device, location, and time agree. Companions: <code>MobileLogin</code>, a lat/long pair.</li>
+      <li><strong>Telephony from the client&rsquo;s registered landline</strong> (Telephony, Landline, IVR). The originating number is the evidence. Companions: <code>TelephonyPIN</code>, <code>OriginatingPhoneNumber</code>.</li>
+      <li><strong>Fixed device in the home</strong> (FVV, FOB, Alternative Device). A code-generating token proves presence more loosely. Companion: a device ID such as <code>EVV_ALTERNATIVEDEVICEID</code>.</li>
+      <li class="weakest"><strong>Manual entry, GUI entry, or no verification</strong> (Manual, GUI, NON). A human typed it, or nothing verified that end of the visit. This is the rung states cap and the one that demands reason codes.</li>
+    </ol>
+
+    <p class="prose" data-claim="M2.LP">The ordering is this guide&rsquo;s judgment, not a spec&rsquo;s; no spec ranks its own values. Each rung is placed by what the method proves on its own. The one debatable call is telephony above fixed device; a reasonable integrator could swap those two. The bottom rung is the one that matters either way, because manual share is the quantity states cap.</p>
+
+    <p class="prose" data-claim="M2.CO">When you translate these four vocabularies into one common field, keep the proof, not just the answer. Each value is backed by other fields on the record: a Telephony clock-in carries the phone number it came from, a Mobile or GPS one carries coordinates. Store the value without those fields and you can still say the visit was verified, but you can no longer show why. And a value that arrives without its backing fields is itself a red flag worth surfacing.</p>
+
+    <p class="prose" data-claim="M2.DV">Two differences deserve attention. Netsmart verifies each end of the visit independently, so a visit can be GPS-verified in and unverified out. And the HHAeXchange API enum has no Manual value, but that does not mean manual entry cannot happen there. Per the spec, a visit time with no EVV call behind it is &ldquo;considered manually confirmed,&rdquo; and a changed one is &ldquo;considered manually edited,&rdquo; with the edit passed as reason codes (<a href="#m5">05</a>). The manual rung exists in every dialect; HHAeXchange just keeps it outside this enum.</p>
+
+    <p class="prose" data-claim="M2.REG">To be precise about who requires what: the federal Cures Act mandates EVV but sets no numeric limit on manual entry. The caps are state policy. Pennsylvania requires 85% of visits to verify automatically with no manual edits, and Texas polices edits through mandatory reason codes and a 95-day correction window (<a href="#m5">05</a>).</p>
+
+    <div class="ops" data-claim="M2.OPS"><span class="opslabel">Why this matters at 3 AM</span>Manual share is the leading indicator. A rising Manual or GUI percentage means an agency is drifting toward its state&rsquo;s edit cap weeks before any report says so, and it points at the caregivers whose clock-ins keep failing.</div>
+
+    <p class="src">Enums transcribed from: Sandata altEVV v7.10; HHAX EVV API (IL); TMHP Appendix C v3.0; Netsmart Implementation Guide.</p>
+
+  </div>
+</section>
+
+<section class="module" id="m3">
+  <div class="wrap">
+    <h2><span class="mnum">03</span>Where authorization lives</h2>
+    <div class="judgment" data-claim="M3.J"><p>A delivered visit outside an active authorization is care the agency gave away for free. And no two dialects let you check billability the same way, because they do not agree on where the authorization lives in the data, or whether it exists as its own record at all.</p></div>
+
+    <p class="prose" data-claim="M3.DEF">An authorization is the payer&rsquo;s advance approval of care for one client, and it is three constraints at once: a service type, a unit budget, and a date window (for example: personal care, up to 6 hours a week, for 12 weeks). All three must be true at the time of the visit. And authorized hours are use-it-or-lose-it: hours not delivered by the end of the window expire, so an unfilled shift is revenue lost for good, not revenue delayed.</p>
+
+    <div class="authgrid" data-claim="M3.T">
+      <div class="authcard"><span class="dtag">SAND</span><span class="where">No authorization record at all.</span><p>Payer effective dates, the start and end of the payer&rsquo;s coverage, hide inside <code>ClientPayerInformation</code> on the client record. To tell whether a visit is billable, you cross-check its service code and date against those client-record dates; there is no authorization record to look up.</p></div>
+      <div class="authcard"><span class="dtag">HHAX</span><span class="where">A separate authorizations API.</span><p>Authorization data lives in its own feed, beside the visit feed. To check a visit, you pull both feeds and match them up yourself.</p></div>
+      <div class="authcard"><span class="dtag">NS</span><span class="where">A reference number on every visit.</span><p><code>AuthorizationID</code> travels on each visit record, but it is only a reference. The feed does not say whether the visit was authorized; you look up the authorization that ID names and check its units and date window yourself.</p></div>
+      <div class="authcard"><span class="dtag">TX</span><span class="where">Written into the visit record itself.</span><p><code>VISIT_AUTHORIZATION_NUMBER</code> is one of the 141 fields. The number travels with the visit.</p></div>
+    </div>
+
+    <div class="ops" data-claim="M3.OPS"><span class="opslabel">Why this matters at 3 AM</span>Filling a gap is not only &ldquo;who is free and nearby.&rdquo; The replacement visit must fall inside the client&rsquo;s active authorization: right service code, units remaining, window still open. A replacement who is free and nearby can still produce an unbillable visit if any of those three checks fails, and then the agency pays the caregiver with no reimbursement.</div>
+
+    <p class="src">Sandata altEVV v7.10 (ClientPayerInformation); HHAX EDI docs (auth API); Netsmart Implementation Guide; TMHP Appendix C v3.0. Use-it-or-lose-it: CareBravo, &ldquo;Authorization Management.&rdquo;</p>
+
+    <details class="why">
+      <summary>Why authorization is treated as the gate</summary>
+      <div class="whybody">
+        <p>Two mechanics make authorization a gate rather than paperwork. Payers pay only authorized services: outside the service type, unit budget, or date window, the claim is denied after the agency has already paid the caregiver. And authorized hours expire when the window closes. Both are standard Medicaid home-care mechanics, cited in the source line below.</p>
+        <p>Given those stakes, where each dialect stores the authorization determines how you have to build validation. If payers in practice routinely paid slightly-out-of-authorization claims, this module would overstate the risk; the sources say they do not.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section class="module" id="m4">
+  <div class="wrap">
+    <h2><span class="mnum">04</span>Identity: what is &ldquo;the same visit&rdquo;?</h2>
+    <div class="judgment" data-claim="M4.J"><p>&ldquo;Same visit&rdquo; is a judgment the software has to make, not a fact it can look up. The same hour of care exists at once in the agency&rsquo;s EMR, the EVV system, and the state&rsquo;s aggregator, under identifiers that do not align.</p></div>
+
+    <div class="egrid ehead-on" data-claim="M4.T">
+      <div class="ehead" aria-hidden="true"><span>Field</span><span>HHAX</span><span>SAND</span><span>TX</span><span>NS</span></div>
+      <div class="erow">
+        <span class="elabel">Visit identifiers</span>
+        <div class="ecell"><span class="dtag">HHAX</span><code>externalVisitID</code> (the agency&rsquo;s) + <code>evvmsId</code> (the aggregator&rsquo;s, assigned on arrival)</div>
+        <div class="ecell"><span class="dtag">SAND</span><code>VisitOtherID</code> (the agency&rsquo;s)</div>
+        <div class="ecell"><span class="dtag">TX</span><code>VISIT_VISITID</code></div>
+        <div class="ecell"><span class="dtag">NS</span><code>VisitId</code> (the aggregator&rsquo;s, unique across every agency)</div>
+      </div>
+    </div>
+
+    <ol class="steps" data-claim="M4.FB">
+      <li>The agency schedules the visit in its EMR, which stores it under an ID of its own.</li>
+      <li>After the visit, the agency&rsquo;s EVV system submits the record to the aggregator, with the agency&rsquo;s ID inside it, in the field the spec reserves for it (<code>externalVisitID</code>, <code>VisitOtherID</code>).</li>
+      <li>The aggregator stores its own copy and stamps its own ID on it (<code>evvmsId</code>, <code>VisitId</code>). One visit now lives in two databases under two IDs.</li>
+      <li>If the aggregator&rsquo;s copy has a problem, a missing clock-out, an unverified time, the visit cannot be billed until a coordinator fixes it. The fix starts with knowing which client, caregiver, and shift the flagged record refers to, and that information lives in the EMR.</li>
+      <li>When the agency&rsquo;s ID made the round trip, connecting the two records is a lookup. When it did not, the records can only be matched on their facts: same client, same caregiver, same service day, times within a tolerance (the service day itself depends on a timezone conversion; <a href="#c3">concept 3 above</a>). Records without the ID occur often enough in production that Zingage&rsquo;s published matching logic has a branch for exactly that case.</li>
+    </ol>
+
+    <p class="prose" data-claim="M4.ERR">A matcher can fail in two directions. Too strict, and one broken visit shows up as two separate problems, one from each database, so the coordinator gets two tickets for one fix. Too loose, and a broken record gets attached to the wrong healthy visit when a client had more than one that day, so the problem looks handled and nobody fixes it. And unfixed means unpaid: since April 2024, Texas denies any claim for an EVV-required service that does not match an accepted visit, and that match runs on the same kind of facts, Medicaid ID, date of service, procedure code, not on a shared visit ID.</p>
+
+    <p class="prose" data-claim="M4.IND">This is a structural property of the industry, not a defect in any one vendor. The EVV mandate put a verification system between the agency&rsquo;s EMR and the state, so every visit is recorded in more than one system from the start. Each integrator has to decide how much drift to tolerate and which source wins for each field, and the answer differs per integration because rounding behavior differs per system.</p>
+
+    <div class="ops" data-claim="M4.OPS"><span class="opslabel">Why this matters at 3 AM</span>The unverified 9:00 PM visit in the aggregator and the 9:00 PM visit in the EMR are usually the same visit under two IDs. Matching code that does not know that pages a coordinator twice for one problem, or never.</div>
+
+    <p class="src">ID fields: Sandata altEVV v7.10; HHAX EVV API (IL); Netsmart Implementation Guide; TMHP Appendix C v3.0. Reconciliation in practice: Zingage Engineering, &ldquo;How We Built a Data Platform for AI Agents.&rdquo; Claims matching: TMHP bulletin, 03/2024; HHSC mismatch best practices.</p>
+
+    <details class="why">
+      <summary>Why identity is called a policy decision</summary>
+      <div class="whybody">
+        <p>Because the identifiers are minted by different systems at different moments: the agency assigns its ID at scheduling, the aggregator assigns its own when the record arrives, and nothing forces them to reference each other. When IDs fail to line up, the only remaining evidence is participants plus time, and time is exactly the part that drifts, gets rounded, and crosses midnight in UTC.</p>
+        <p>Production code in this industry already works this way. <a href="https://engineering.zingage.com/how-we-built-a-data-platform-for-ai-agents/">Zingage&rsquo;s data-platform post</a> publishes its fallback identity check: match patient, caregiver, and service day within an adaptive epsilon (their term for the time tolerance) that &ldquo;adjusts per integration, based on observed rounding and clock-in drift,&rdquo; with the service day computed in the business timezone, not UTC. Every clause of that check is a policy choice of the kind this module describes.</p>
+        <p>Any code that matches records across these systems therefore contains a tolerance decision, whether or not its author made it consciously. The claim here is only that the decision should be explicit.</p>
+      </div>
+    </details>
+
+  </div>
+</section>
+
+<section class="module" id="m5">
+  <div class="wrap">
+    <h2><span class="mnum">05</span>Two reason-code families, two different processes</h2>
+    <div class="judgment" data-claim="M5.J"><p>Two of the four dialects cannot say &ldquo;this visit never happened.&rdquo; And confusing a fixed visit with a missed one is not a bookkeeping error: one direction bills Medicaid for care nobody delivered, a false claim; the other writes off revenue the agency actually earned.</p></div>
+
+    <div class="egrid ehead-on" data-claim="M5.T">
+      <div class="ehead" aria-hidden="true"><span>Family</span><span>HHAX</span><span>SAND</span><span>TX</span><span>NS</span></div>
+      <div class="erow">
+        <span class="elabel">Edit codes <span class="esub">visit happened, record changed</span></span>
+        <div class="ecell"><span class="dtag">HHAX</span><code>editVisit.reasonCode/actionCode</code>: IL reasons 200-222, actions 11-25</div>
+        <div class="ecell"><span class="dtag">SAND</span><code>VisitChanges[]</code>: reason, resolution, memo, who, when</div>
+        <div class="ecell"><span class="dtag">TX</span><code>EVV_REASONCODE1..10</code>, each with <code>&hellip;DESC</code> + <code>&hellip;COMMENT</code></div>
+        <div class="ecell"><span class="dtag">NS</span><code>ReasonCode1..4</code></div>
+      </div>
+      <div class="erow">
+        <span class="elabel">Missed-visit codes <span class="esub">visit never happened</span></span>
+        <div class="ecell"><span class="dtag">HHAX</span><code>missedVisit.reasonCode/actionCode</code>: IL reasons 600-611, actions 51-58</div>
+        <div class="ecell"><span class="dtag">SAND</span>no missed-visit codes in the base spec; a cancel flag (<code>VisitCancelledIndicator</code>) plus whatever exceptions the aggregator flags</div>
+        <div class="ecell"><span class="dtag">TX</span>no distinct missed-visit record in Appendix C (see scenario C below)</div>
+        <div class="ecell"><span class="dtag">NS</span><code>MissedVisitReason</code> + <code>MissedVisitActionTaken</code>, required when <code>VisitStatus</code> = <code>UNBL</code> (unbillable)</div>
+      </div>
+    </div>
+
+    <p class="prose" data-claim="M5.ASYM">The empty half of that grid is the finding. In HHAeXchange and Netsmart, a miss is its own record, with reason codes and follow-up actions. In the Sandata base spec the closest thing is a bare cancel flag, and in the Texas layout there is no missed-visit record at all: the state learns of a miss late, through visit maintenance, or never, and the agency detects it from its own schedule (scenario C below plays this out).</p>
+
+    <p class="prose" data-claim="M5.CLK">The two families run on different deadlines. In Texas, an edit can happen for up to 95 calendar days after the visit, each one carrying a reason code and the name of who made it; Texas calls this correction window visit maintenance. A miss creates duties immediately: cover the visit, notify people, and for Medicare-certified home health, tell the physician when a visit ordered in the plan of care is missed.</p>
+
+    <div class="ops" data-claim="M5.OPS"><span class="opslabel">Why this matters at 3 AM</span>The coordinator covering a no-show and the coordinator fixing a dead-phone clock-in are doing different jobs: one has a client at home without care right now, the other has paperwork inside a correction window. A tool that shows both in one merged &ldquo;exceptions&rdquo; list buries the urgent job under the clerical one.</div>
+
+    <p class="src">Code ranges: HHAX EVV API (IL). VisitChanges: Sandata altEVV v7.10. Reason codes: TMHP Appendix C v3.0; TX HHSC &sect;9000. UNBL rule: Netsmart Implementation Guide. Physician duty: CMS home-health Conditions of Participation.</p>
+
+    <details class="why">
+      <summary>Why edits and misses are treated as different objects</summary>
+      <div class="whybody">
+        <p>Because the dialects and the regulators already treat them separately. HHAeXchange publishes separate code tables for the two (200-222 versus 600-611 in Illinois). Netsmart requires a missed-visit reason only when the status is unbillable. The deadlines differ too: edits are bounded by a visit-maintenance window, while a miss creates duties immediately, including a physician notification for Medicare-certified home health. Merging them into one list erases distinctions the compliance rules themselves draw.</p>
+        <p>The false-claim framing in the judgment is this guide&rsquo;s inference, not a quoted rule: it follows from billing being allowed only for verified, delivered visits, and from the anti-fraud purpose of the EVV mandate itself (the CMS deck in the sources). The forfeited-revenue direction follows from the use-it-or-lose-it mechanics in 03.</p>
+        <p>One caveat: the Sandata and Texas cells in the missed-visit row are absence claims, inferred from what the specs do not say. They are the likeliest cells in this table to be wrong, and the spec wins if it disagrees. The judgment&rsquo;s &ldquo;two of the four&rdquo; leans on exactly those cells.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section id="payloads">
+  <div class="wrap">
+    <h2>One visit, three spellings</h2>
+    <p class="prose">The same two-hour personal-care visit, hand-built to the published shapes of three dialects. Pick a scenario. Highlights mark the lines that change between dialects or between scenarios.</p>
+
+    <div class="scenepick">
+      <button class="active" type="button" data-scene="a" aria-pressed="true">Clean visit</button>
+      <button type="button" data-scene="b" aria-pressed="false">Late clock-in, fixed by hand</button>
+      <button type="button" data-scene="c" aria-pressed="false">The visit that never happened</button>
+    </div>
+
+    <!-- ============ SCENARIO A ============ -->
+    <div class="scene active" id="scene-a">
+      <p class="story" data-claim="PV.A0">Scheduled 9:00 to 11:00 AM Central. Denise clocks in at 8:58 on the mobile app, GPS inside the geofence, and out at 11:03. Nobody ever touches the record.</p>
+      <div class="panes">
+        <div class="pane">
+          <div class="phead"><span class="pname">Sandata altEVV</span><span class="pfmt">REST JSON</span></div>
+          <pre data-claim="PV.A.SAND">{
+  <span class="hl">"VisitOtherID": "AC-2026-118342",</span>
+  "ClientIDQualifier": "ClientMedicaidID",
+  "ClientID": "530771246",
+  "EmployeeQualifier": "EmployeeCustomID",
+  "EmployeeIdentifier": "E-40917",
+  "ProcedureCode": "T1019",
+  "VisitTimeZone": "US/Central",
+  "Calls": [
+    { "CallDateTime": "2026-06-29T13:58:41Z",
+      "CallAssignment": "Time In",
+      "CallType": "Mobile",
+      "MobileLogin": "dokafor",
+      "CallLatitude": 29.468213,
+      "CallLongitude": -98.524878 },
+    { "CallDateTime": "2026-06-29T16:03:12Z",
+      "CallAssignment": "Time Out",
+      "CallType": "Mobile",
+      "CallLatitude": 29.468198,
+      "CallLongitude": -98.524901 }
+  ],
+  "AdjInDateTime": null,
+  "AdjOutDateTime": null,
+  "BillVisit": true,
+  "HoursToBill": 2.0,
+  "VisitChanges": []
+}</pre>
+        </div>
+        <div class="pane">
+          <div class="phead"><span class="pname">HHAeXchange EVV API</span><span class="pfmt">REST JSON</span></div>
+          <pre data-claim="PV.A.HHAX">{
+  <span class="hl">"externalVisitID": "AC-2026-118342",</span>
+  <span class="hl">"evvmsId": 90731428,</span> <span class="cmt">// theirs, assigned on arrival</span>
+  "Member": {
+    "identifier": "530771246",
+    "qualifier": "MedicaidID"
+  },
+  "Caregiver": {
+    "externalID": "E-40917",
+    "qualifier": "ExternalID"
+  },
+  "procedureCode": "T1019",
+  "timezone": "US/Central",
+  "scheduleStartTime": "2026-06-29T14:00:00Z",
+  "scheduleEndTime":   "2026-06-29T16:00:00Z",
+  "visitStartDateTime": "2026-06-29T13:58:41Z",
+  "visitEndDateTime":   "2026-06-29T16:03:12Z",
+  "Evv": {
+    "clockIn": {
+      "callDateTime": "2026-06-29T13:58:41Z",
+      "callType": "Mobile",
+      "callLatitude": 29.468213,
+      "callLongitude": -98.524878 },
+    "clockOut": {
+      "callDateTime": "2026-06-29T16:03:12Z",
+      "callType": "Mobile" }
+  }
+}</pre>
+        </div>
+        <div class="pane">
+          <div class="phead"><span class="pname">Texas Appendix C</span><span class="pfmt">positional, excerpt</span></div>
+          <pre data-claim="PV.A.TX"><span class="cmt">// 141-field positional record,</span>
+<span class="cmt">// shown as name: value for readability</span>
+
+<span class="hl">VISIT_VISITID             118342</span>
+VISIT_VISITDATE           06/29/2026
+VISIT_VISITTIMEIN         09:00
+VISIT_VISITTIMEOUT        11:00
+INDVMBR_MEDICAIDID        530771246
+EMPLOYEE_EMPLOYEEID       40917
+VISIT_SVCGRP              1
+EVV_SVCCODE               17
+EVV_HCPCS_CODE            T1019
+EVV_CALLINTIME            08:58
+EVV_CALLOUTTIME           11:03
+EVV_INPUTMETHOD_IN        Mobile Method
+EVV_INPUTMETHOD_OUT       Mobile Method
+EVV_VISIT_LATITUDE_IN     29.468213
+EVV_VISIT_LONGITUDE_IN    -98.524878
+<span class="hl">EVV_LAT_LONG_MATCH_IN     Y</span>
+<span class="hl">EVV_LAT_LONG_MATCH_OUT    Y</span>
+EVV_VISITLOCATION         Member Home
+EVV_BILL_TIME_IN          08:58
+EVV_BILL_TIME_OUT         11:03
+EVV_ROUNDED_ACTUALHOURS   2.00
+EVV_UNITS                 8 <span class="cmt">// placeholder; assumes 15-min units</span>
+EVV_VISITRECORDINDICATOR  New
+<span class="cmt">// EVV_REASONCODE1..10: empty</span></pre>
+        </div>
+      </div>
+      <ul class="callouts">
+        <li data-claim="PV.A1">Three names for one visit before anything goes wrong: the agency&rsquo;s <code>AC-2026-118342</code> travels as <code>VisitOtherID</code> and <code>externalVisitID</code>, HHAeXchange assigns its own <code>evvmsId</code> on ingest, and Texas carries <code>VISIT_VISITID</code> (<a href="#m4">04</a>).</li>
+        <li data-claim="PV.A2">Two dialects speak UTC with a timezone field; the Texas layout speaks local Central time. The same 8:58 arrival is <code>13:58:41Z</code> in two dialects and <code>08:58</code> in the third. Every attempt to match these records passes through a timezone conversion.</li>
+        <li data-claim="PV.A3">Only the Texas pane states a verdict: <code>EVV_LAT_LONG_MATCH_IN: Y</code>. The other two hand you coordinates and let you do the judging (<a href="#m2">02</a>).</li>
+      </ul>
+    </div>
+
+    <!-- ============ SCENARIO B ============ -->
+    <div class="scene" id="scene-b">
+      <p class="story" data-claim="PV.B0">Denise arrives on time at 9:00, but her phone is dead. It comes back at 9:47 and she clocks in. The coordinator confirms the real arrival with the client, adjusts the billable start to 9:00 with a reason code, and rounds the 11:03 clock-out to the scheduled 11:00. The raw call times survive everywhere.</p>
+      <div class="panes">
+        <div class="pane">
+          <div class="phead"><span class="pname">Sandata altEVV</span><span class="pfmt">REST JSON</span></div>
+          <pre data-claim="PV.B.SAND">{
+  "VisitOtherID": "AC-2026-118342",
+  "ProcedureCode": "T1019",
+  "VisitTimeZone": "US/Central",
+  "Calls": [
+    { <span class="hl">"CallDateTime": "2026-06-29T14:47:22Z",</span>
+      "CallAssignment": "Time In",
+      "CallType": "Mobile" },
+    { "CallDateTime": "2026-06-29T16:03:12Z",
+      "CallAssignment": "Time Out",
+      "CallType": "Mobile" }
+  ],
+  <span class="hl">"AdjInDateTime":  "2026-06-29T14:00:00Z",</span>
+  "AdjOutDateTime": "2026-06-29T16:00:00Z",
+  <span class="hl">"VisitChanges": [</span>
+    { "ReasonCode": "45", <span class="cmt">// each state sets its own values</span>
+      "ResolutionCode": "A",
+      "ChangeReasonMemo": "Phone battery died; arrival confirmed with member",
+      "ChangeMadeBy": "j.reyes@agency.example",
+      "ChangeDateTime": "2026-06-30T15:12:09Z" }
+  ],
+  "BillVisit": true,
+  "HoursToBill": 2.0
+}</pre>
+        </div>
+        <div class="pane">
+          <div class="phead"><span class="pname">HHAeXchange EVV API</span><span class="pfmt">REST JSON</span></div>
+          <pre data-claim="PV.B.HHAX">{
+  "externalVisitID": "AC-2026-118342",
+  "procedureCode": "T1019",
+  "timezone": "US/Central",
+  "scheduleStartTime": "2026-06-29T14:00:00Z",
+  "scheduleEndTime":   "2026-06-29T16:00:00Z",
+  <span class="hl">"visitStartDateTime": "2026-06-29T14:00:00Z",</span>
+  "visitEndDateTime":   "2026-06-29T16:00:00Z",
+  "Evv": {
+    "clockIn": {
+      <span class="hl">"callDateTime": "2026-06-29T14:47:22Z",</span>
+      "callType": "Mobile" },
+    "clockOut": {
+      "callDateTime": "2026-06-29T16:03:12Z",
+      "callType": "Mobile" }
+  },
+  <span class="hl">"editVisit": {</span>
+    "reasonCode": "204", <span class="cmt">// IL table: 200-222</span>
+    "actionCode": "12",  <span class="cmt">// IL table: 11-25</span>
+    "notes": "Phone battery died; arrival confirmed with member"
+  }
+}</pre>
+        </div>
+        <div class="pane">
+          <div class="phead"><span class="pname">Texas Appendix C</span><span class="pfmt">positional, excerpt</span></div>
+          <pre data-claim="PV.B.TX">VISIT_VISITID             118342
+VISIT_VISITDATE           06/29/2026
+VISIT_VISITTIMEIN         09:00
+VISIT_VISITTIMEOUT        11:00
+<span class="hl">EVV_CALLINTIME            09:47</span>
+EVV_CALLOUTTIME           11:03
+EVV_INPUTMETHOD_IN        Mobile Method
+<span class="hl">EVV_BILL_TIME_IN          09:00</span>
+EVV_BILL_TIME_OUT         11:00
+EVV_ROUNDED_ACTUALHOURS   2.00
+<span class="hl">EVV_REASONCODE1           900</span>
+EVV_REASONCODE1DESC       Failed to clock in
+                          (non-preferred)
+EVV_REASONCODE1COMMENT    Phone battery died;
+                          arrival confirmed
+                          with member 06/30
+EVV_VISITRECORDINDICATOR  Updated</pre>
+        </div>
+      </div>
+      <ul class="callouts">
+        <li data-claim="PV.B1">The same correction lands in three different places: Sandata appends to <code>VisitChanges[]</code> with who and when, HHAeXchange attaches <code>editVisit</code> codes, Texas fills a numbered reason code with a description and a free-text comment (<a href="#m5">05</a>).</li>
+        <li data-claim="PV.B2">Nothing overwrites the raw clock-in. 9:47 stays in <code>Calls[]</code>, <code>Evv.clockIn</code>, and <code>EVV_CALLINTIME</code> forever; the corrected 9:00 lands in each dialect&rsquo;s separate adjusted fields, <code>AdjInDateTime</code>, <code>visitStartDateTime</code>, <code>EVV_BILL_TIME_IN</code> (<a href="#m1">01</a>).</li>
+        <li data-claim="PV.B3">This record now counts against the agency&rsquo;s manual-edit ratio. Under a Pennsylvania-style rule, 85% of visits must verify with no edits at all; in Texas, this edit had 95 days to happen and had to carry a reason code.</li>
+      </ul>
+    </div>
+
+    <!-- ============ SCENARIO C ============ -->
+    <div class="scene" id="scene-c">
+      <p class="story" data-claim="PV.C0">A 6:00 PM visit. No clock-in ever arrives, calls go unanswered, and no replacement reaches the home in time. There is nothing to verify. The dialects disagree about how, or whether, to record a visit that did not happen.</p>
+      <div class="panes">
+        <div class="pane">
+          <div class="phead"><span class="pname">Sandata altEVV</span><span class="pfmt">REST JSON</span></div>
+          <pre data-claim="PV.C.SAND">{
+  "VisitOtherID": "AC-2026-119006",
+  "ClientIDQualifier": "ClientMedicaidID",
+  "ClientID": "530771246",
+  "EmployeeIdentifier": "E-40917",
+  "ProcedureCode": "T1019",
+  "ScheduleStartTime": "2026-06-29T23:00:00Z",
+  "ScheduleEndTime":   "2026-06-30T01:00:00Z",
+  <span class="hl">"VisitCancelledIndicator": true,</span>
+  <span class="hl">"Calls": [],</span>
+  "BillVisit": false
+}
+<span class="cmt">// The base spec has no missed-visit
+// reason vocabulary. The miss is an
+// absence: a cancel flag, empty Calls,
+// and any exception flags the
+// aggregator derives from the
+// empty call record.</span></pre>
+        </div>
+        <div class="pane">
+          <div class="phead"><span class="pname">HHAeXchange EVV API</span><span class="pfmt">REST JSON</span></div>
+          <pre data-claim="PV.C.HHAX">{
+  "externalVisitID": "AC-2026-119006",
+  "Member": {
+    "identifier": "530771246",
+    "qualifier": "MedicaidID"
+  },
+  "procedureCode": "T1019",
+  "scheduleStartTime": "2026-06-29T23:00:00Z",
+  "scheduleEndTime":   "2026-06-30T01:00:00Z",
+  <span class="hl">"missedVisit": {</span>
+    <span class="hl">"reasonCode": "602",</span> <span class="cmt">// IL: 600-611</span>
+    <span class="hl">"actionCode": "54",</span>  <span class="cmt">// IL: 51-58</span>
+    "notes": "Caregiver unreachable; client informed; backup search started"
+  }
+  <span class="cmt">// no Evv block: nothing was verified</span>
+}</pre>
+        </div>
+        <div class="pane">
+          <div class="phead"><span class="pname">Texas Appendix C</span><span class="pfmt">no record?</span></div>
+          <div class="pnote" data-claim="PV.C.TX">
+            <p>Appendix C defines a <em>visit transaction</em>. A visit that produced no calls is not a distinct record type in the layout.</p>
+            <p>As far as the published layout shows, the miss either enters the state&rsquo;s view later, through visit maintenance (the Texas correction window described in <a href="#m5">05</a>) and reason codes, or never enters it at all.</p>
+            <p>You detect this case from your own schedule, before this feed is ever involved. The feed will not tell you.</p>
+          </div>
+        </div>
+      </div>
+      <ul class="callouts">
+        <li data-claim="PV.C1">HHAeXchange records the miss as its own object with its own code tables, separate from the edit tables. Sandata records an absence plus a cancel flag. Netsmart (not shown) records a status: <code>VisitStatus: UNBL</code> with <code>MissedVisitReason</code> required. Texas may have no record at all. Four different answers for the same non-event (<a href="#m5">05</a>).</li>
+        <li data-claim="PV.C2">Whatever the dialect, the miss is discovered the same way: a scheduled start passed with no matching clock-in. The status and reason fields above are filled in by the agency after the fact; at the moment the visit is being missed, you detect it by comparing the schedule against the clock-ins that actually arrived, never by reading a field (<a href="#m1">01</a>).</li>
+      </ul>
+    </div>
+
+    <p class="illustr" data-claim="PV.ILL">Illustrative records, hand-built to the shapes the published specs describe. Field names and enum values are real; every data value, ID, and person is invented; specific reason-code digits are placeholders within the published ranges. Formatting details (date formats, casing, envelope fields) will differ in production feeds.</p>
+
+  </div>
+</section>
+
+<section id="cap">
+  <div class="wrap">
+    <h2>What each dialect can&rsquo;t say</h2>
+    <p class="prose" data-claim="CAP.J">Which workflows you can build for a customer depends on which dialect their state uses. Check the data model before scoping the product.</p>
+
+    <table class="cap">
+      <thead>
+        <tr><th scope="col">Can it express&hellip;</th><th scope="col">HHAX</th><th scope="col">SAND</th><th scope="col">TX</th><th scope="col">NS</th></tr>
+      </thead>
+      <tbody>
+        <tr data-claim="CAP.1">
+          <th scope="row">A task / observation list</th>
+          <td class="yes">&#10003;<span class="capnote">performedTasks[]</span></td>
+          <td class="yes">&#10003;<span class="capnote">VisitTasks[]</span></td>
+          <td class="no">&#215;</td>
+          <td class="yes">&#10003;<span class="capnote">Tasks</span></td>
+        </tr>
+        <tr data-claim="CAP.2">
+          <th scope="row">Authorization as its own record</th>
+          <td class="yes">&#10003;<span class="capnote">separate API</span></td>
+          <td class="no">&#215;</td>
+          <td class="part">&#9681;<span class="capnote">number on the visit</span></td>
+          <td class="part">&#9681;<span class="capnote">ID to look up</span></td>
+        </tr>
+        <tr data-claim="CAP.3">
+          <th scope="row">A missed visit as a record</th>
+          <td class="yes">&#10003;<span class="capnote">missedVisit</span></td>
+          <td class="no">&#215;</td>
+          <td class="no">&#215;</td>
+          <td class="yes">&#10003;<span class="capnote">UNBL + reason</span></td>
+        </tr>
+        <tr data-claim="CAP.4">
+          <th scope="row">A location verdict</th>
+          <td class="no">&#215;</td>
+          <td class="no">&#215;</td>
+          <td class="yes">&#10003;<span class="capnote">LAT_LONG_MATCH</span></td>
+          <td class="no">&#215;</td>
+        </tr>
+        <tr data-claim="CAP.5">
+          <th scope="row">Adjusted times distinct from actual</th>
+          <td class="part">&#9681;<span class="capnote">see 01</span></td>
+          <td class="yes">&#10003;<span class="capnote">AdjIn/Out</span></td>
+          <td class="yes">&#10003;<span class="capnote">BILL_TIME</span></td>
+          <td class="yes">&#10003;<span class="capnote">Invoice fields</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="legendline">&#10003; has fields for it &nbsp;&nbsp; &#9681; partially or indirectly &nbsp;&nbsp; &#215; not in the published layout</p>
+    <p class="prose" data-claim="CAP.N">Tasks are the least standardized element. The base Sandata contract, HHAeXchange, and Netsmart all carry a task list, but the Texas layout has none, and Ohio and North Carolina, two states that run Sandata, leave the task fields out of their state variants. A state variant can drop whole fields, not just change code values, so even a &#10003; in this row needs a check against the specific state&rsquo;s spec before you scope a task workflow.</p>
+
+    <details class="why">
+      <summary>How to read the &times; and &#9681; marks</summary>
+      <div class="whybody">
+        <p>An &times; means the published layout has no field for it. That is a claim about what a document leaves out, which is easier to get wrong than a claim about what it says. If you doubt an &times;, check the cited spec, and trust the spec over this table wherever they disagree. The two most consequential absences, Sandata&rsquo;s missing missed-visit codes and the missing missed-visit record in the Texas layout, are discussed where they matter (05 and scenario C above). The &#9681; marks are this guide&rsquo;s call about what counts as partial; the specs do not grade their own fields.</p>
+      </div>
+    </details>
+  </div>
+</section>
+
+<section id="agency">
+  <div class="wrap">
+    <div class="aside" data-claim="AX.1">
+      <h2>The agency-side blind spot</h2>
+      <p>Everything above is the aggregator&rsquo;s view. The scheduling EMR where an agency actually lives sees the same visit differently. AxisCare, a widely deployed home-care EMR, publishes a full public API, documented in OpenAPI 3.1, covering clients, caregivers, visits, schedules, activities of daily living, and call logs, and no EVV aggregator file spec at all: EVV capture happens inside its mobile app and flows to the state aggregators on the agency&rsquo;s behalf.</p>
+      <p>So the agency&rsquo;s record of a visit carries schedules, visits, and call logs, but not the proof layout above: no verification enums, no match flags, no reason-code tables. The aggregator&rsquo;s record is almost nothing but that layout. Reconciling the two views (<a href="#m4">04</a>) is a routine part of integration work. <a href="https://engineering.zingage.com/how-we-built-a-data-platform-for-ai-agents/">Zingage&rsquo;s data-platform post</a> shows the split from the inside: in its field-ownership example, the EMR (AxisCare) owns the schedule and the clock-ins, caregiver metadata belongs to the HR system, and assignment status to Zingage itself. Every field has exactly one writer, and the merged record is put together at read time, each time something asks for it.</p>
+    </div>
+
+  </div>
+</section>
+
+<footer id="sources">
+  <div class="wrap">
+    <h2>Sources</h2>
+    <ul class="srclist">
+      <li><span class="sname"><a href="https://www.medicaid.gov/medicaid/home-community-based-services/downloads/evv-requirements-workshop.pdf">CMS, &ldquo;EVV Requirements in the 21st Century Cures Act&rdquo;</a></span> <span class="smeta">workshop deck; the six elements verbatim</span></li>
+      <li><span class="sname"><a href="https://medicaid.ncdhhs.gov/documents/providers/programs-services/evv/openevv-altevv-v7-10-final/download">Sandata, altEVV Requirement Specification v7.10 FINAL</a></span> <span class="smeta">08/24/2020, via NC Medicaid</span></li>
+      <li><span class="sname"><a href="https://hhaxsupport.s3.amazonaws.com/SupportDocs/EDI%20Guides/EVV%20Aggregation/IL/HHAX%20EVV%20API%20Technical%20Specifications_%20IL.pdf">HHAeXchange, EVV API Technical Specifications (Illinois)</a></span> <span class="smeta">API v1, revisions through 10/2024</span></li>
+      <li><span class="sname"><a href="https://mobilecaregiverplus.com/wp-content/uploads/2023/06/Netsmart-Alternate-EVV-Vendor-Implementation-Guide-MT-20230622.pdf">Netsmart, Alternate EVV Vendor Implementation Guide</a></span> <span class="smeta">MT-20230622</span></li>
+      <li><span class="sname"><a href="https://www.tmhp.com/sites/default/files/file-library/evv/evv-proprietary-systems/hhsc-evv-business-rules-proprietary-systems-2/Appendix_C_EVV_Visit_Transaction_Layout_V3.0.pdf">Texas TMHP, Appendix C: EVV Visit Transaction Layout v3.0</a></span> <span class="smeta">effective 08/01/2023; with EVV Business Rules for Proprietary Systems v3.1</span></li>
+      <li><span class="sname"><a href="https://hhs.texas.gov/laws-regulations/handbooks/evvpph/section-9000-evv-reason-code">Texas HHSC, EVV Policy Handbook &sect;9000: Reason Codes / Visit Maintenance</a></span> <span class="smeta">95-day window, reason-code catalog</span></li>
+      <li><span class="sname"><a href="https://www.tmhp.com/news/2024-03-08-evv-claims-matching-begins-april-1-unmatched-evv-claims-will-deny-payment">Texas TMHP, &ldquo;EVV Claims Matching Begins April 1&rdquo;</a></span> <span class="smeta">bulletin, 03/2024; unmatched EVV claims deny for payment</span></li>
+      <li><span class="sname"><a href="https://www.hhs.texas.gov/sites/default/files/documents/doing-business-with-hhs/providers/long-term-care/evv/evv-module-15-best-practices-avoid-mismatches.pdf">Texas HHSC, &ldquo;EVV Best Practices to Avoid EVV Claim Mismatches&rdquo;</a></span> <span class="smeta">the data elements claims are matched on</span></li>
+      <li><span class="sname"><a href="https://www.pa.gov/agencies/dhs/resources/for-providers/evv/faq-evv">Pennsylvania DHS, EVV FAQ</a></span> <span class="smeta">85% auto-verification requirement</span></li>
+      <li><span class="sname"><a href="https://static.axiscare.com/api/documentation.html">AxisCare, API documentation (OpenAPI 3.1)</a></span> <span class="smeta">agency-side EMR surface</span></li>
+      <li><span class="sname"><a href="https://engineering.zingage.com/how-we-built-a-data-platform-for-ai-agents/">Zingage Engineering, &ldquo;How We Built a Data Platform for AI Agents&rdquo;</a></span> <span class="smeta">practitioner evidence: read-time visit reconciliation, adaptive epsilon, field ownership</span></li>
+      <li><span class="sname"><a href="https://engineering.zingage.com/the-timeline-we-owed-our-coordinators/">Zingage Engineering, &ldquo;The Timeline We Owed Our Coordinators&rdquo;</a></span> <span class="smeta">the 3 AM no-show timeline and the missing clock-in quote</span></li>
+      <li><span class="sname"><a href="https://engineering.zingage.com/keep-grandma-out-of-the-hospital-the-zingage-way/">Zingage Engineering, &ldquo;Keep Grandma Out of the Hospital, the Zingage Way&rdquo;</a></span> <span class="smeta">source of the race-condition line quoted in the framing note</span></li>
+    </ul>
+    <p class="drift" data-claim="F1">Specs drift. Field names, enums, and code ranges above were checked against research transcriptions of these documents on July 3, 2026; the HHAeXchange Illinois spec was additionally checked directly on July 5, 2026, and direct checks of the remaining PDFs are in progress. Values in the sample records are invented; the shapes are not. If this page disagrees with a current spec, trust the spec.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  // Spine accordion. The whole row is a click target; the button stays the
+  // keyboard/AT toggle. Skip clicks on links and clicks that end a text selection.
+  document.querySelectorAll('.crow').forEach(function (row) {
+    var btn = row.querySelector('.chead');
+    row.addEventListener('click', function (e) {
+      if (e.target.closest('a')) return;
+      if (String(window.getSelection())) return;
+      var open = row.classList.toggle('open');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  });
+
+  // Sticky band: visible only once the hero has scrolled away
+  var band = document.getElementById('siteband');
+  var hero = document.querySelector('header.hero');
+  if (band && hero && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      band.classList.toggle('on', !entries[0].isIntersecting);
+    }).observe(hero);
+  }
+
+  // Payload scenario picker
+  var picks = document.querySelectorAll('.scenepick button');
+  picks.forEach(function (b) {
+    b.addEventListener('click', function () {
+      picks.forEach(function (o) { o.classList.remove('active'); o.setAttribute('aria-pressed', 'false'); });
+      b.classList.add('active');
+      b.setAttribute('aria-pressed', 'true');
+      document.querySelectorAll('.scene').forEach(function (s) { s.classList.remove('active'); });
+      document.getElementById('scene-' + b.dataset.scene).classList.add('active');
+    });
+  });
+
+})();
+</script>
+</body>
+</html>
