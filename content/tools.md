@@ -10,7 +10,7 @@ I care a lot about the tools I use and frequently try out new ones or try to opt
 **Development**
 - [VSCode](https://code.visualstudio.com/): mostly for viewing code and files at this point
 - [cmux](https://cmux.com/): coding agent homebase
-- **Claude Code, Codex**: coding agent subscriptions
+- *Claude Code, Codex*: coding agent subscriptions
 - [CodexBar](https://github.com/steipete/CodexBar): AI subscription usage limit tracking
 
 **Productivity**
