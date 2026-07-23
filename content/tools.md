@@ -21,7 +21,7 @@ I care a lot about the tools I use and frequently try out new ones or try to opt
 - [AI Gate](https://github.com/inulute/ai-gate): dedicated desktop app to access all AI chatbot sites with tmux-style tabs/windowing (I am a [contributor](https://github.com/inulute/ai-gate/releases#release-v4.6.0))
 
 **General Mac**
-- [Google Chrome](https://www.google.com/chrome/): no strong use case for an AI browser yet; I use the Claude for Chrome
+- [Google Chrome](https://www.google.com/chrome/): no strong use case for an AI browser yet
 - [Charmstone](https://charmstone.app/): app switcher / launcher; I love keyboard shortcuts
 - [Maccy](https://maccy.app/): clipboard history
 - [Rectangle](https://rectangleapp.com/): window management
