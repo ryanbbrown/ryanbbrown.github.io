@@ -3,11 +3,11 @@
 ---
 # books
 
-*Last updated: August 18, 2026*
+*Last updated: September 24, 2026*
 
 I mostly read science fiction and fantasy. I sometimes diversify, but as mentioned in [now](/now), I have the lofty goal of reading every major fantasy/sci-fi series ever written (from [r/fantasy](https://www.reddit.com/r/Fantasy/comments/1jjif55/rfantasy_top_novels_2025_results/)). I read on a Kindle Paperwhite when possible and my phone otherwise.
 
-**Current Total**: 151 books
+**Current Total**: 153 books
 
 | **Series / Book Name** | **Author** | **# Books** | **# Finished** | **Tier** |
 | --- | --- | --- | --- | --- |
@@ -18,13 +18,14 @@ I mostly read science fiction and fantasy. I sometimes diversify, but as mention
 | The Broken Earth | N.K. Jemisin | 3 | 3 | S |
 | The Stormlight Archive | Brandon Sanderson | 5\* | 5 | S |
 | Babel | R.F. Kuang |  |  | A |
+| Exhalation | Ted Chiang |  |  | A |
 | Gentleman Bastard | Scott Lynch | 3\* | 3 | A |
 | Mistborn | Brandon Sanderson | 7 | 7 | A |
 | Realm of the Elderlings | Robin Hobb | 16 | 16 | A |
 | Red Rising | Pierce Brown | 6\* | 6 | A |
 | Remarkably Bright Creatures | Shelby Van Pelt |  |  | A |
 | Remembrance of Earth’s Past | Cixin Liu | 3 | 3 | A |
-| Sun Eater | Christopher Ruocchio | 7 | 4 | A |
+| Sun Eater | Christopher Ruocchio | 7 | 5 | A |
 | The First Law | Joe Abercrombie | 3 | 3 | A |
 | The Sirens of Titan | Kurt Vonnegut |  |  | A |
 | A Song of Ice and Fire | George R. R. Martin | 5\* | 2 | B |
