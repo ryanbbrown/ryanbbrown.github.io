@@ -5,6 +5,10 @@ on:
   push:
     branches: ["master"]
 
+  # Refresh the published opinions from the source repository.
+  schedule:
+    - cron: "17 */6 * * *"
+
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -41,6 +45,18 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+
+      - name: Sync opinions
+        run: |
+          source_file="${{ runner.temp }}/OPINIONS.md"
+          curl --fail --silent --show-error --location \
+            https://raw.githubusercontent.com/ryanbbrown/ryanbbrown/main/OPINIONS.md \
+            --output "$source_file"
+          test "$(head -n 1 "$source_file")" = "# OPINIONS"
+          {
+            printf '%s\n' '---' 'layout: opinions' '---'
+            tail -n +2 "$source_file"
+          } > content/opinions.md
 
       - name: Setup Pages
         id: pages

@@ -145,6 +145,10 @@ main:not(.centered) h3:not(.project-card h3) {
     margin-bottom: 10px;
 }
 
+.opinions-page h2 {
+    font-weight: 400;
+}
+
 main p {
     margin-bottom: 20px;
     color: var(--color-body-text);
